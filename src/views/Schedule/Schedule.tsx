@@ -37,7 +37,7 @@ import EventContext from '@/context/EventContext';
 
 import defaultColumns from './Schedule.service';
 import { getScheduleData, getPersonalBests } from '@/api/api';
-import MapDetailCell from '../HuntingScheduleTableCells/MapDetailCell';
+import MapDetailCell from '@/components/HuntingScheduleTableCells/MapDetailCell';
 import { mergeSheetsAndPBs } from '@/components/SheetOperations';
 
 const Spreadsheet = () => {

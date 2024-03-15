@@ -85,6 +85,24 @@ const RouteNavigation = () => {
           <MdOutlineDataExploration size={iconSize} />
           <Text display={{ base: 'none', md: 'block' }}>Hunting</Text>
         </Button>
+        <Button
+          as={NavLink}
+          aria-label='World records'
+          variant='ghost'
+          to='/wrs'
+          flexDirection={{ base: 'column', lg: 'row' }}
+          _activeLink={{
+            bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100',
+          }}
+          roundedBottom={1}
+          h='full'
+          letterSpacing={0}
+          filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
+          gap={{ base: 0, md: 0, lg: 2 }}
+        >
+          <MdOutlineDataExploration size={iconSize} />
+          <Text display={{ base: 'none', md: 'block' }}>WR's</Text>
+        </Button>
         {event.isLive === 'active' ||
           (event.isLive === 'post' && (
             <Button

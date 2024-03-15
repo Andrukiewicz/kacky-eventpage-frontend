@@ -21,7 +21,7 @@ import {
   Flex,
   Link,
 } from '@chakra-ui/react';
-import MapDetailCell from '../HuntingScheduleTableCells/MapDetailCell';
+import MapDetailCell from '@/components/HuntingScheduleTableCells/MapDetailCell';
 import { getMapInfo, setMapInfo } from '@/api/api';
 import AuthContext from '@/context/AuthContext';
 

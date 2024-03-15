@@ -15,10 +15,10 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { DateTime } from 'luxon';
 
-import MapNumberCell from '../HuntingScheduleTableCells/MapNumberCell';
-import MapFinishedCell from '../HuntingScheduleTableCells/MapFinishedCell';
-import MapClipCell from '../HuntingScheduleTableCells/MapClipCell';
-import { diffBadgeColorArr } from '../HuntingScheduleTableCells/MapDifficultyCell';
+import MapNumberCell from '@/components/HuntingScheduleTableCells/MapNumberCell';
+import MapFinishedCell from '@/components/HuntingScheduleTableCells/MapFinishedCell';
+import MapClipCell from '@/components/HuntingScheduleTableCells/MapClipCell';
+import { diffBadgeColorArr } from '@/components/HuntingScheduleTableCells/MapDifficultyCell';
 import { FormattedMap } from '@/components/SheetOperations';
 
 const columnHelper = createColumnHelper<FormattedMap>();

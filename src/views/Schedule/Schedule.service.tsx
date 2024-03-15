@@ -21,11 +21,11 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { DateTime } from 'luxon';
 
-import MapNumberCell from '../HuntingScheduleTableCells/MapNumberCell';
-import MapFinishedCell from '../HuntingScheduleTableCells/MapFinishedCell';
-import MapClipCell from '../HuntingScheduleTableCells/MapClipCell';
+import MapNumberCell from '@/components/HuntingScheduleTableCells/MapNumberCell';
+import MapFinishedCell from '@/components/HuntingScheduleTableCells/MapFinishedCell';
+import MapClipCell from '@/components/HuntingScheduleTableCells/MapClipCell';
 // eslint-disable-next-line no-unused-vars
-import MapDiscordCell from '../HuntingScheduleTableCells/MapDiscordCell';
+import MapDiscordCell from '@/components/HuntingScheduleTableCells/MapDiscordCell';
 
 const columnHelper = createColumnHelper();
 

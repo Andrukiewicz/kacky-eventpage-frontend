@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDashboardData } from '@/api/api';
-import UnfinishedTracker from '../../../components/ServerWidgets/UnfinishedTracker';
+import UnfinishedTracker from '@/components/ServerWidgets/UnfinishedTracker';
 import {
   Box,
   Center,
@@ -14,7 +14,7 @@ import {
   VStack,
   useColorMode,
 } from '@chakra-ui/react';
-import CompactServerList from '../../../components/ServerWidgets/CompactServerList';
+import CompactServerList from '@/components/ServerWidgets/CompactServerList';
 import { IMAGES } from '@/utils/Images';
 import KrLogo2023 from '@/assets/logos/krLogo2023';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Button,
   Center,
@@ -14,17 +13,9 @@ const WRHolders = () => {
   const [krView, setKrView] = useBoolean();
 
   return (
-    <Center
-      px={{ base: 4, md: 8 }}
-      mt={{ base: -16, md: -20 }}
-      mb={{ base: 24, md: 8 }}
-      w='full'
-    >
+    <Center px={{ base: 4, md: 8 }} mb={{ base: 24, md: 8 }} w='full'>
       <VStack overflow='hidden' spacing={4}>
-        <Heading mt={{ base: 14, md: 10 }} mb={{ base: 0, md: 4 }}>
-          List of WR Holders
-        </Heading>
-
+        <Heading>List of WR Holders</Heading>
         <Center mb={{ base: 0, md: 4 }}>
           <Button
             borderRadius='6px 0 0 6px'

@@ -51,7 +51,7 @@ import {
   getPerformance,
 } from '@/api/api';
 
-import MapDetailCell from '../HuntingScheduleTableCells/MapDetailCell';
+import MapDetailCell from '@/components/HuntingScheduleTableCells/MapDetailCell';
 import { donutChartOptionsCharts1 } from '../Dashboard/EventsProgress';
 import { FormattedMap, mergeSheetsAndPBs } from '@/components/SheetOperations';
 

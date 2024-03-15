@@ -3,7 +3,6 @@ import {
   Text,
   Flex,
   Center,
-  Spacer,
   useDisclosure,
   Box,
   Tooltip,

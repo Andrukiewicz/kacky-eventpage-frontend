@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Icon, Text, HStack, Badge } from '@chakra-ui/react';
 
 import {

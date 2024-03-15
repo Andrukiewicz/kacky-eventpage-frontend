@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useContext,
-  Fragment,
-} from 'react';
+import { useRef, useState, useEffect, useContext, Fragment } from 'react';
 
 import {
   TableContainer,

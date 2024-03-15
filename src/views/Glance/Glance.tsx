@@ -19,7 +19,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/react';
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import {
   MdGridView,
   MdInvertColors,

@@ -9,7 +9,7 @@ import {
   Switch,
   useToast,
 } from '@chakra-ui/react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getAllEvents, setEventInfo } from '@/api/api';
 import AuthContext from '@/context/AuthContext';
 

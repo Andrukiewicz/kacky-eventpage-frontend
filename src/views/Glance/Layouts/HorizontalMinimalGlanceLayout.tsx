@@ -1,5 +1,4 @@
 import { Center, HStack } from '@chakra-ui/react';
-import React from 'react';
 import PropTypes from 'prop-types';
 import HorizontalMinimalCard from './components/HorizontalMinimalCard';
 

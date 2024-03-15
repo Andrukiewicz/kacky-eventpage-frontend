@@ -1,7 +1,6 @@
 import { Box, Icon, Text, Tooltip } from '@chakra-ui/react';
 import { MdAccountCircle, MdOutlineSportsScore } from 'react-icons/md';
 import { createColumnHelper } from '@tanstack/react-table';
-import React from 'react';
 import '@fontsource/montserrat';
 import DOMPurify from 'dompurify';
 

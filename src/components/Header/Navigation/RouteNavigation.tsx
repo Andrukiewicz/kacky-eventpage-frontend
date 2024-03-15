@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useContext } from 'react';
 import {
+  MdBarChart,
   MdOutlineDashboard,
   MdOutlineDataExploration,
   MdOutlineEvent,
@@ -100,7 +101,7 @@ const RouteNavigation = () => {
           filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
           gap={{ base: 0, md: 0, lg: 2 }}
         >
-          <MdOutlineDataExploration size={iconSize} />
+          <MdBarChart size={iconSize} />
           <Text display={{ base: 'none', md: 'block' }}>WR's</Text>
         </Button>
         {event.isLive === 'active' ||

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Flex, Icon, Text, VStack } from '@chakra-ui/react';
 
 import {

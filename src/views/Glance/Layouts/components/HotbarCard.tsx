@@ -11,7 +11,7 @@ import {
   useTheme,
   Progress,
 } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { MdOutlineDns, MdArrowRightAlt } from 'react-icons/md';
 
 import { getMapImageUrl } from '@/api/api';

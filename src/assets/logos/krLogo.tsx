@@ -1,7 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-const KrLogo = ({ width, color }) => (
+const KrLogo = ({ width, color }: { width: string; color: string }) => (
   <svg
     width={width}
     fill={color}
@@ -145,11 +142,6 @@ const KrLogo = ({ width, color }) => (
     </g>
   </svg>
 );
-
-KrLogo.propTypes = {
-  color: PropTypes.string,
-  width: PropTypes.string,
-};
 
 KrLogo.defaultProps = {
   color: '#FFFFFF',

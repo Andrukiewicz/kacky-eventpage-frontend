@@ -5,7 +5,6 @@ import { Routes, Route } from 'react-router-dom';
 // UI & Layout
 import { ChakraProvider } from '@chakra-ui/react';
 import MainLayout from './MainLayout';
-import { motion } from 'framer-motion';
 
 // React Query
 import { useQuery } from '@tanstack/react-query';
@@ -107,7 +106,7 @@ const App = () => {
       if (import.meta.env.DEV) {
         setEvent({
           status: localStorage.getItem('eventLiveStatus') || eventStatus.status,
-          type: eventStatus.type.toLowerCase() || '',
+          type: eventStatus.type?.toLowerCase() || '',
           edition: eventStatus.edition || 0,
         });
       } else {

@@ -6,24 +6,43 @@ import {
   Link,
   List,
   ListItem,
+  Heading,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 
 const PreEvent = () => {
-  const eventStart = DateTime.fromISO('2023-08-18T20:00:00.000', {
-    zone: 'CET',
-  });
-  const mappingDeadine = DateTime.fromISO('2023-07-31T22:00:00.000', {
-    zone: 'CET',
-  });
+  interface TimerState {
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
+  }
 
-  function updateTimer(diffDate: date) {
+  const eventStart: DateTime = DateTime.fromISO('2023-08-18T20:00:00.000', {
+    zone: 'CET',
+  });
+  const mappingDeadline: DateTime = DateTime.fromISO(
+    '2023-07-31T22:00:00.000',
+    {
+      zone: 'CET',
+    }
+  );
+
+  function updateTimer(diffDate: DateTime): TimerState {
     const now = DateTime.now();
-    const remainDays = Math.floor((diffDate - now) / (1000 * 60 * 60 * 24));
-    const remainHours = Math.floor(((diffDate - now) / (1000 * 60 * 60)) % 24);
-    const remainMinutes = Math.floor(((diffDate - now) / (1000 * 60)) % 60);
-    const remainSeconds = Math.floor(((diffDate - now) / 1000) % 60);
+    const remainDays = Math.floor(
+      diffDate.diff(now, 'milliseconds').milliseconds / (1000 * 60 * 60 * 24)
+    );
+    const remainHours = Math.floor(
+      (diffDate.diff(now, 'milliseconds').milliseconds / (1000 * 60 * 60)) % 24
+    );
+    const remainMinutes = Math.floor(
+      (diffDate.diff(now, 'milliseconds').milliseconds / (1000 * 60)) % 60
+    );
+    const remainSeconds = Math.floor(
+      (diffDate.diff(now, 'milliseconds').milliseconds / 1000) % 60
+    );
     return {
       days: String(remainDays).padStart(2, '0'),
       hours: String(remainHours).padStart(2, '0'),
@@ -32,28 +51,34 @@ const PreEvent = () => {
     };
   }
 
-  const [remainingTime, setRemainingTime] = useState(updateTimer(eventStart));
-  const [mappingEnd, setMappingEnd] = useState(updateTimer(mappingDeadine));
+  const [remainingTime, setRemainingTime] = useState<TimerState>(
+    updateTimer(eventStart)
+  );
+  const [mappingEnd, setMappingEnd] = useState<TimerState>(
+    updateTimer(mappingDeadline)
+  );
 
   useEffect(() => {
-    setTimeout(() => {
+    const intervalId = setInterval(() => {
       setRemainingTime(updateTimer(eventStart));
-      setMappingEnd(updateTimer(mappingDeadine));
+      setMappingEnd(updateTimer(mappingDeadline));
     }, 1000);
-  });
 
-  function isMappingEnded() {
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array for continuous updates
+
+  function isMappingEnded(): boolean {
     return (
-      mappingEnd.days +
-        mappingEnd.hours +
-        mappingEnd.minutes +
-        mappingEnd.seconds >
+      Number(mappingEnd.days) +
+        Number(mappingEnd.hours) +
+        Number(mappingEnd.minutes) +
+        Number(mappingEnd.seconds) >
       0
     );
   }
 
-  function toCETtoUserTime(datetimeString) {
-    const inputDateTime = DateTime.fromISO(datetimeString, {
+  function toCETtoUserTime(datetimeString: string): string {
+    const inputDateTime: DateTime = DateTime.fromISO(datetimeString, {
       zone: 'Europe/Berlin',
     });
     const userTimezone = DateTime.local().zoneName;
@@ -70,79 +95,43 @@ const PreEvent = () => {
       second: 'numeric',
     });
 
-    return `${intlDate.toString()}, ${intlTime.toString()} (${userDateTime.toFormat(
-      'ZZZZ'
-    )})`;
+    return `${intlDate.toString()}, ${intlTime.toString()} (${userDateTime.toFormat('ZZZZ')})`;
   }
 
   return (
-    <Stack spacing={16} mt={8} mb={32} px={{ base: 4, md: 8 }}>
-      <Text
+    <Stack
+      spacing={8}
+      mt={8}
+      mb={32}
+      px={{ base: 4, md: 8 }}
+      textAlign='center'
+      justify='center'
+      align='center'
+    >
+      <Heading
         fontWeight='500'
         textShadow='glow'
         letterSpacing='0.2em'
-        fontSize={{ base: 'lg', md: '5xl' }}
+        fontSize={{ base: '2xl', md: '4xl' }}
+        m={0}
       >
-        Kacky Reloaded 4 - August 2023
-      </Text>
+        <Text>Kacky Reloaded 4</Text>
+        <Text>August 2023</Text>
+      </Heading>
       <Center>
-        <HStack>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            {`${remainingTime.days}`}
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            :
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            {`${remainingTime.hours}`}
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            :
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            {`${remainingTime.minutes}`}
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            :
-          </Text>
-          <Text
-            fontWeight='500'
-            textShadow='glow'
-            letterSpacing='0.2em'
-            fontSize={{ base: 'lg', md: '4xl' }}
-          >
-            {`${remainingTime.seconds}`}
-          </Text>
+        <HStack
+          fontWeight='500'
+          textShadow='glow'
+          letterSpacing='0.2em'
+          fontSize={{ base: '2xl', md: '4xl' }}
+        >
+          <Text>{`${remainingTime.days}`}</Text>
+          <Text>:</Text>
+          <Text>{`${remainingTime.hours}`}</Text>
+          <Text>:</Text>
+          <Text>{`${remainingTime.minutes}`}</Text>
+          <Text>:</Text>
+          <Text>{`${remainingTime.seconds}`}</Text>
         </HStack>
       </Center>
       <Center pt={2}>

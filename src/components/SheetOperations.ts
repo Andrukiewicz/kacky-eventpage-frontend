@@ -16,7 +16,6 @@ interface SheetItem {
   wr_holder: string;
   upcomingIn: number;
   server: string;
-  // default_clip: string;
 }
 
 interface PBItem {

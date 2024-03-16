@@ -74,7 +74,6 @@ const App = () => {
   // Interface for the event state
   interface EventState {
     isLive: string;
-    name: string;
     type: string;
     edition: number;
   }
@@ -82,7 +81,6 @@ const App = () => {
   // State hook with the initial state and type annotation
   const [event, setEvent] = useState<EventState>({
     isLive: 'offseason',
-    name: '',
     type: '',
     edition: 0,
   });
@@ -115,32 +113,46 @@ const App = () => {
   };
 
   useEffect(() => {
-    eventLiveState()
-      .then(
-        (data: {
-          status: string;
-          type?: string;
-          edition?: number;
-          name?: string;
-        }) => {
+    if (import.meta.env.DEV) {
+      eventLiveState()
+        .then((data: { status: string; type?: string; edition?: number }) => {
+          setEvent({
+            isLive: localStorage.getItem('eventLiveStatus') || data.status,
+            type: data.type?.toLowerCase() || '',
+            edition: data.edition || 0,
+          });
+        })
+        .catch(error => {
+          setEvent({
+            isLive: 'offseason',
+            type: '',
+            edition: 0,
+          });
+        })
+        .finally(() => {
+          setIsLoadingEvents(false); // Indicate loading completion
+        });
+    } else {
+      eventLiveState()
+        .then((data: { status: string; type?: string; edition?: number }) => {
           setEvent({
             isLive: data.status,
-            type: data.type?.toLowerCase() || 'e',
+            type: data.type?.toLowerCase() || '',
             edition: data.edition || 0,
-            name: data.name || 'over',
+          });
+        })
+        .catch(error => {
+          setEvent({
+            isLive: 'offseason',
+            type: '',
+            edition: 0,
           });
           setIsLoadingEvents(false); // Indicate loading completion
-        }
-      )
-      .catch(error => {
-        setEvent({
-          isLive: 'offseason',
-          name: '',
-          type: '',
-          edition: 0,
+        })
+        .finally(() => {
+          setIsLoadingEvents(false); // Indicate loading completion
         });
-        setIsLoadingEvents(false); // Indicate loading completion
-      });
+    }
   }, []);
 
   return (

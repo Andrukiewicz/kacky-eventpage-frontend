@@ -6,6 +6,8 @@ import {
   useTheme,
   useBreakpointValue,
   VStack,
+  Text,
+  Select,
 } from '@chakra-ui/react';
 import { NavLink, Outlet } from 'react-router-dom';
 
@@ -14,10 +16,13 @@ import KrLogo2023 from '@/assets/logos/krLogo2023';
 import RouteNavigation from '@/components/Header/Navigation/RouteNavigation';
 import UserNavigation from '@/components/Header/Navigation/UserNavigation';
 import { getDefaultBackgrounds } from '@/utils/theme';
+import { useContext } from 'react';
+import EventContext from './context/EventContext';
 
 const MainLayout = () => {
   const theme = useTheme();
   const { colorMode } = useColorMode();
+  const { event, setEvent } = useContext(EventContext);
 
   const logoSize = useBreakpointValue({
     base: '120px',
@@ -36,7 +41,7 @@ const MainLayout = () => {
         w='100%'
         height='100%'
         px={{ base: 0, md: 8 }}
-        h={{ base: '60px', md: '80px' }}
+        h={{ base: '60px', md: 'fit-content' }}
         bg={
           colorMode === 'dark'
             ? getDefaultBackgrounds().dark[1]
@@ -53,49 +58,86 @@ const MainLayout = () => {
         backdropFilter='auto'
         backdropBlur='16px'
       >
-        <HStack
+        <VStack
           as='nav'
           spacing={0}
           gap={0}
-          pt={{ base: 1, md: 4 }}
           h='full'
           w={{ base: 'full', md: 'container.xl' }}
         >
-          <Box
-            display={{ base: 'none', md: 'block' }}
-            px={{ base: 4, md: 2, lg: 4 }}
-            borderBottom='1px'
-            mt='1px'
-            borderColor={
-              colorMode === 'dark'
-                ? getDefaultBackgrounds().dark[1]
-                : getDefaultBackgrounds().light[1]
-            }
-            h='full'
-          >
+          <HStack justify='space-between' w='full'>
             <Box
-              as={NavLink}
-              display='flex'
-              alignContent='end'
-              mt={{ md: 9, lg: 7, xl: 5 }}
-              filter={theme.shadows.dropGlow}
-              _hover={{
-                transform: 'scale(1.05)',
-                transition: 'transform 0.2s ease-in-out', // Combine all transition properties
-              }}
+              display={{ base: 'none', md: 'block' }}
+              px={{ base: 4, md: 2, lg: 4 }}
+              borderBottom='1px'
+              mt='1px'
+              borderColor={
+                colorMode === 'dark'
+                  ? getDefaultBackgrounds().dark[1]
+                  : getDefaultBackgrounds().light[1]
+              }
+              h='full'
             >
-              <KrLogo2023
-                color={colorMode === 'dark' ? 'white' : 'black'}
-                width={logoSize}
-              />
+              <Box
+                as={NavLink}
+                display='flex'
+                alignContent='end'
+                mt={{ md: 9, lg: 7, xl: 5 }}
+                filter={theme.shadows.dropGlow}
+                _hover={{
+                  transform: 'scale(1.05)',
+                  transition: 'transform 0.2s ease-in-out', // Combine all transition properties
+                }}
+              >
+                <KrLogo2023
+                  color={colorMode === 'dark' ? 'white' : 'black'}
+                  width={logoSize}
+                />
+              </Box>
             </Box>
-          </Box>
-          <HStack justify='space-between' align='end' w='full' h='full'>
-            <RouteNavigation />
             <UserNavigation />
           </HStack>
-        </HStack>
+          <HStack justify='center' align='end' w='full' h='full' pos='relative'>
+            <RouteNavigation />
+            {import.meta.env.DEV && (
+              <VStack position='absolute' right={0} gap={0}>
+                <Text fontSize='xs' textTransform='initial'>
+                  Dev event status
+                </Text>
+                <Select
+                  w='fit-content'
+                  size='xs'
+                  variant='outline'
+                  sx={{
+                    '> option': {
+                      background: `
+                ${
+                  colorMode === 'dark'
+                    ? getDefaultBackgrounds().dark[0]
+                    : getDefaultBackgrounds().light[0]
+                }`,
+                    },
+                  }}
+                  value={event.isLive}
+                  onChange={e => {
+                    setEvent({
+                      ...event,
+                      isLive: e?.target?.value,
+                    });
+                    localStorage.setItem('eventLiveStatus', e.target.value); // Update localStorage
+                  }}
+                >
+                  <option value='active'>active</option>
+                  <option value='pre'>pre</option>
+                  <option value='post'>post</option>
+                  <option value='offseason'>offseason</option>
+                </Select>
+              </VStack>
+            )}
+          </HStack>
+        </VStack>
       </Center>
+
       <VStack w='full' minH='100vh' justify='space-between'>
         <Box
           as='main'

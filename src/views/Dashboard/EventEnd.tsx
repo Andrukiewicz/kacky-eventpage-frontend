@@ -67,7 +67,7 @@ const EventEnd = () => {
           letterSpacing='0.2em'
           fontSize={{ base: '2xl', md: '4xl' }}
         >
-          {event.type === 'kk' ? 'Kackiest Kacky' : 'Kacky Reloaded'}{' '}
+          {event.type === 'kk' || 'KK' ? 'Kackiest Kacky' : 'Kacky Reloaded'}{' '}
           {event.edition} is over!
         </Text>
         <Text
@@ -126,6 +126,7 @@ const EventEnd = () => {
             order={2}
             bgGradient='radial(rgba(74, 252, 71, 0.1) 0%, transparent 60%)'
             p={48}
+            position='relative'
           >
             <CircularProgress
               trackColor={
@@ -135,18 +136,29 @@ const EventEnd = () => {
               }
               thickness='1px'
               min={0}
-              max={50}
+              // This is static please grab length of maps for event
+              max={75}
               color='green.300'
               value={finishes}
               size='20rem'
               filter='drop-shadow(0px 0px 20px #4afc47);'
             >
+              <Text
+                position='absolute'
+                fontSize='sm'
+                color='red'
+                letterSpacing={0}
+                style={{ textWrap: 'balance' }}
+              >
+                Max finishes is static please grab length of maps for event
+              </Text>
               <CircularProgressLabel
                 fontSize='4xl'
                 color='green.300'
                 letterSpacing='0.2em'
               >
-                {finishes} / 50
+                {/* This is static please grab length of maps for event */}
+                {finishes} / 75
               </CircularProgressLabel>
             </CircularProgress>
           </Box>

@@ -302,8 +302,8 @@ const theme = extendTheme({
       variants: {
         outline: {
           field: {
-            background: 'blackAlpha.50',
-            _dark: { background: 'whiteAlpha.200' },
+            background: 'neutral.200',
+            _dark: { background: 'neutral.800' },
           },
         },
       },

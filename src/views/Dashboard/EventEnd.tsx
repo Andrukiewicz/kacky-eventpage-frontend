@@ -60,7 +60,7 @@ const EventEnd = () => {
   }, [data, isSuccess]);
 
   return (
-    <Stack spacing={16} mt={8} mb={32} px={{ base: 4, md: 8 }}>
+    <Stack spacing={16} px={{ base: 4, md: 8 }} textAlign='center'>
       <Stack>
         <Text
           textShadow='glow'
@@ -140,7 +140,7 @@ const EventEnd = () => {
               max={75}
               color='green.300'
               value={finishes}
-              size='20rem'
+              size='15rem'
               filter='drop-shadow(0px 0px 20px #4afc47);'
             >
               <Text

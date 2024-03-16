@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ColorModeScript } from '@chakra-ui/react';
 
 import App from './App';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const container = document.getElementById('root');
 if (!container) {
@@ -13,11 +14,15 @@ if (!container) {
 }
 const root = createRoot(container);
 
+const queryClient = new QueryClient();
+
 root.render(
   <StrictMode>
     <BrowserRouter>
       <ColorModeScript />
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>
 );

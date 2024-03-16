@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 export interface EventContextProps {
-  isLive: string;
+  status: string;
   type: string;
   edition: number;
 }
@@ -13,7 +13,7 @@ export type EventContextStateProps = {
 };
 
 const defaultAuthState: EventContextStateProps = {
-  event: { isLive: '', type: '', edition: 0 },
+  event: { status: '', type: '', edition: 0 },
   setEvent: () => {},
 };
 

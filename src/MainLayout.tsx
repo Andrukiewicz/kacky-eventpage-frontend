@@ -19,7 +19,11 @@ import { getDefaultBackgrounds } from '@/utils/theme';
 import { useContext } from 'react';
 import EventContext from './context/EventContext';
 
-const MainLayout = () => {
+const MainLayout = ({
+  isLoadingEventStatus,
+}: {
+  isLoadingEventStatus: boolean;
+}) => {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const { event, setEvent } = useContext(EventContext);
@@ -28,7 +32,7 @@ const MainLayout = () => {
     base: '120px',
     md: '160px',
     lg: '220px',
-    xl: '260px',
+    xl: '200px',
   });
 
   return (
@@ -65,7 +69,7 @@ const MainLayout = () => {
           h='full'
           w={{ base: 'full', md: 'container.xl' }}
         >
-          <HStack justify='space-between' w='full'>
+          <HStack justify='space-between' w='full' py={2}>
             <Box
               display={{ base: 'none', md: 'block' }}
               px={{ base: 4, md: 2, lg: 4 }}
@@ -82,7 +86,7 @@ const MainLayout = () => {
                 as={NavLink}
                 display='flex'
                 alignContent='end'
-                mt={{ md: 9, lg: 7, xl: 5 }}
+                // mt={{ md: 9, lg: 7, xl: 5 }}
                 filter={theme.shadows.dropGlow}
                 _hover={{
                   transform: 'scale(1.05)',
@@ -98,8 +102,8 @@ const MainLayout = () => {
             <UserNavigation />
           </HStack>
           <HStack justify='center' align='end' w='full' h='full' pos='relative'>
-            <RouteNavigation />
-            {import.meta.env.DEV && (
+            {event && <RouteNavigation />}
+            {import.meta.env.DEV && !isLoadingEventStatus && (
               <VStack position='absolute' right={0} gap={0}>
                 <Text fontSize='xs' textTransform='initial'>
                   Dev event status
@@ -118,11 +122,11 @@ const MainLayout = () => {
                 }`,
                     },
                   }}
-                  value={event.isLive}
+                  value={event.status}
                   onChange={e => {
                     setEvent({
                       ...event,
-                      isLive: e?.target?.value,
+                      status: e?.target?.value,
                     });
                     localStorage.setItem('eventLiveStatus', e.target.value); // Update localStorage
                   }}
@@ -141,7 +145,7 @@ const MainLayout = () => {
       <VStack w='full' minH='100vh' justify='space-between'>
         <Box
           as='main'
-          mt={{ base: '16px', md: '80px' }}
+          mt={{ base: '16px', md: '100px' }}
           py={{ base: '2rem', md: '3rem' }}
           px={{ base: 4, md: 8 }}
           w='full'

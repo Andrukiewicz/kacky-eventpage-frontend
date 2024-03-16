@@ -1,3 +1,10 @@
+// Interface for the event state
+type EventStatus = {
+  status: string;
+  type: string;
+  edition: number;
+};
+
 type AvailableEvents = {
   edition: number;
   name: string;

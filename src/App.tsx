@@ -8,7 +8,7 @@ import MainLayout from './MainLayout';
 import { motion } from 'framer-motion';
 
 // React Query
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // Cookies
@@ -52,8 +52,6 @@ import { ServerWidgets } from './views/Widgets/ServerWidgets/ServerWidgets';
 
 const cookies = new Cookies();
 
-const queryClient = new QueryClient();
-
 import theme from './utils/theme';
 import '@fontsource/outfit/200.css';
 import '@fontsource/outfit/300.css';
@@ -63,129 +61,99 @@ import '@fontsource/outfit/600.css';
 import '@fontsource/outfit/700.css';
 
 const App = () => {
-  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
-
   const [authentication, setAuthentication] = useState({
     isLoggedIn: (cookies.get('token') || '') !== '',
     token: cookies.get('token') || '',
     expires: cookies.get('expires') || '',
   });
 
-  // Interface for the event state
-  interface EventState {
-    isLive: string;
-    type: string;
-    edition: number;
-  }
-
   // State hook with the initial state and type annotation
-  const [event, setEvent] = useState<EventState>({
-    isLive: 'offseason',
+  const [event, setEvent] = useState<EventStatus>({
+    status: 'active',
     type: '',
     edition: 0,
   });
 
-  const Loader = () => (
-    // Think about better skeleton
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    ></motion.div>
-  );
-
   // EventSwitcher component with typed props and return type
-  const EventSwitcher: React.FC<{ event: EventState }> = ({ event }) => {
-    if (isLoadingEvents) {
-      return <Loader />;
-    }
-    switch (event.isLive) {
-      case 'active':
-        return <Dashboard />;
-      case 'post':
-        return <EventEnd />;
-      case 'pre':
-        return <PreEvent />;
-      default:
-        return <OffSeason />;
+  const EventSwitcher: React.FC<{ event: EventStatus }> = ({ event }) => {
+    if (isSuccessEventStatus) {
+      switch (event.status) {
+        case 'active':
+          return <Dashboard />;
+        case 'post':
+          return <EventEnd />;
+        case 'pre':
+          return <PreEvent />;
+        default:
+          return <OffSeason />;
+      }
     }
   };
+  // Fetch servers data
+  const {
+    data: eventStatus,
+    isLoading: isLoadingEventStatus,
+    isSuccess: isSuccessEventStatus,
+  } = useQuery({
+    queryKey: ['eventstatus'],
+    queryFn: async () => await eventLiveState(),
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchInterval: 30000,
+  });
 
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      eventLiveState()
-        .then((data: { status: string; type?: string; edition?: number }) => {
-          setEvent({
-            isLive: localStorage.getItem('eventLiveStatus') || data.status,
-            type: data.type?.toLowerCase() || '',
-            edition: data.edition || 0,
-          });
-        })
-        .catch(error => {
-          setEvent({
-            isLive: 'offseason',
-            type: '',
-            edition: 0,
-          });
-        })
-        .finally(() => {
-          setIsLoadingEvents(false); // Indicate loading completion
+    if (isSuccessEventStatus) {
+      if (import.meta.env.DEV) {
+        setEvent({
+          status: localStorage.getItem('eventLiveStatus') || eventStatus.status,
+          type: eventStatus.type.toLowerCase() || '',
+          edition: eventStatus.edition || 0,
         });
-    } else {
-      eventLiveState()
-        .then((data: { status: string; type?: string; edition?: number }) => {
-          setEvent({
-            isLive: data.status,
-            type: data.type?.toLowerCase() || '',
-            edition: data.edition || 0,
-          });
-        })
-        .catch(error => {
-          setEvent({
-            isLive: 'offseason',
-            type: '',
-            edition: 0,
-          });
-          setIsLoadingEvents(false); // Indicate loading completion
-        })
-        .finally(() => {
-          setIsLoadingEvents(false); // Indicate loading completion
+      } else {
+        setEvent({
+          status: eventStatus.status,
+          type: eventStatus.type?.toLowerCase() || '',
+          edition: eventStatus.edition || 0,
         });
+      }
     }
-  }, []);
+  }, [isSuccessEventStatus]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <EventContext.Provider value={{ event, setEvent }}>
-        <AuthContext.Provider value={{ authentication, setAuthentication }}>
-          <ChakraProvider theme={theme}>
-            <Routes>
-              <Route path='/' element={<MainLayout />}>
-                <Route index element={<EventSwitcher event={event} />} />
-                <Route path='schedule' element={<Schedule />} />
-                <Route path='hunting' element={<Hunting />} />
-                <Route path='wrs' element={<WRHolders />} />
-                <Route path='leaderboard' element={<Leaderboard />} />
-                <Route path='profile' element={<Profile />} />
-                <Route path='glance' element={<Glance />} />
-                {/* Move admin to separate Route path group and add new layout */}
-                <Route path='/kackend' element={<AdminIndex />} />
-                <Route path='/kackend/events' element={<EventManager />} />
-                <Route path='/kackend/wrs' element={<WRManager />} />
-                <Route path='/kackend/maps' element={<MapManager />} />
-                <Route path='/streamerstuff' element={<StreamerInfo />} />
-                <Route path='/widgets' element={<Widgets />}>
-                  <Route index element={<ServerWidgets />} />
-                </Route>
-                <Route path='*' element={<div>Nothing here</div>} />
+    <EventContext.Provider value={{ event, setEvent }}>
+      <AuthContext.Provider value={{ authentication, setAuthentication }}>
+        <ChakraProvider theme={theme}>
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <MainLayout isLoadingEventStatus={isLoadingEventStatus} />
+              }
+            >
+              <Route index element={<EventSwitcher event={event} />} />
+              <Route path='schedule' element={<Schedule />} />
+              <Route path='hunting' element={<Hunting />} />
+              <Route path='wrs' element={<WRHolders />} />
+              <Route path='leaderboard' element={<Leaderboard />} />
+              <Route path='profile' element={<Profile />} />
+              <Route path='glance' element={<Glance />} />
+              {/* Move admin to separate Route path group and add new layout */}
+              <Route path='/kackend' element={<AdminIndex />} />
+              <Route path='/kackend/events' element={<EventManager />} />
+              <Route path='/kackend/wrs' element={<WRManager />} />
+              <Route path='/kackend/maps' element={<MapManager />} />
+              <Route path='/streamerstuff' element={<StreamerInfo />} />
+              <Route path='/widgets' element={<Widgets />}>
+                <Route index element={<ServerWidgets />} />
               </Route>
-            </Routes>
-          </ChakraProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </AuthContext.Provider>
-      </EventContext.Provider>
-    </QueryClientProvider>
+              <Route path='*' element={<div>Nothing here</div>} />
+            </Route>
+          </Routes>
+        </ChakraProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </AuthContext.Provider>
+    </EventContext.Provider>
   );
 };
 

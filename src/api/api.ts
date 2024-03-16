@@ -69,7 +69,7 @@ export async function registerUser(data: RegisterUserFormSchema): Promise<any> {
   return response.json();
 }
 
-export async function eventLiveState() {
+export async function eventLiveState(): Promise<EventStatus> {
   const response = await fetch(`${url}/eventstatus`);
   return response.json();
 }

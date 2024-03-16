@@ -48,7 +48,7 @@ const RouteNavigation = () => {
           <MdOutlineDashboard size={iconSize} />
           <Text display={{ base: 'none', md: 'block' }}>Dashboard</Text>
         </Button>
-        {event.isLive === 'active' && (
+        {event.status === 'active' && (
           <Button
             as={NavLink}
             aria-label='Schedule'
@@ -104,8 +104,8 @@ const RouteNavigation = () => {
           <MdBarChart size={iconSize} />
           <Text display={{ base: 'none', md: 'block' }}>WR's</Text>
         </Button>
-        {event.isLive === 'active' ||
-          (event.isLive === 'post' && (
+        {event.status === 'active' ||
+          (event.status === 'post' && (
             <Button
               as={NavLink}
               aria-label='Leaderboard'

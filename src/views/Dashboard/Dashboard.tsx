@@ -129,54 +129,6 @@ const Dashboard = () => {
     return () => clearInterval(timer);
   }, [counter, queryClient]);
 
-  if (isLoading) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
-        <Box
-          display={['flex']} // Use flexbox layout
-          flexDirection={['column', 'column', 'column']} // Stack items vertically on small screens, horizontally on larger screens
-          justifyContent={['flex-start', 'flex-start', 'center']} // Align items to the start on small screens, space them evenly on larger screens
-          alignItems={['flex-start']} // Align items to the start vertically
-          flexWrap='wrap' // Allow items to wrap to the next line if there's not enough space
-          gap='8px' // Add gap between items
-          w='full'
-        >
-          {[...Array(7)].map((_, idx) => (
-            <Box
-              key={idx}
-              width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
-              marginBottom={['8px', '8px', '0']} // Add bottom margin to create space between rows on small screens
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-              >
-                <Skeleton
-                  height='100px'
-                  startColor={`${
-                    colorMode === 'dark'
-                      ? getDefaultBackgrounds().dark[0]
-                      : getDefaultBackgrounds().light[0]
-                  }75`}
-                  endColor={`${
-                    colorMode === 'dark'
-                      ? getDefaultBackgrounds().dark[1]
-                      : getDefaultBackgrounds().light[1]
-                  }75`}
-                />
-              </motion.div>
-            </Box>
-          ))}
-        </Box>
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -218,52 +170,91 @@ const Dashboard = () => {
                   Remixed 3
                 </Text>
               </HStack>
-              {/* <Text textTransform='initial'>
-                  {servers[0].timeLimit / 60}m/map
-                </Text> */}
             </Flex>
           </Box>
-          <Box justifyContent='center' alignContent='center' w='full' gap={0}>
-            {isSuccess ? (
-              <>
-                <HStack justify='space-between' px={4}>
-                  <Text
-                    fontSize='sm'
-                    fontWeight='light'
-                    color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                  >
-                    Active now
-                  </Text>
-                  <Text
-                    fontSize='sm'
-                    fontWeight='light'
-                    color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                  >
-                    Next maps
-                  </Text>
-                </HStack>
-                {servers.map((server, idx) => (
-                  <Fragment key={server.serverNumber}>
-                    <CompactServerList
-                      {...server}
-                      timeLeft={counter[idx] - mapChangeEstimate}
-                      // key={server.serverNumber}
-                    />
+          {isSuccess ? (
+            <Box justifyContent='center' alignContent='center' w='full' gap={0}>
+              <HStack justify='space-between' px={4}>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Active now
+                </Text>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Next maps
+                </Text>
+              </HStack>
+              {servers.map((server, idx) => (
+                <Fragment key={server.serverNumber}>
+                  <CompactServerList
+                    {...server}
+                    timeLeft={counter[idx] - mapChangeEstimate}
+                  />
 
-                    <Divider _last={{ display: 'none' }} />
-                  </Fragment>
-                ))}
-              </>
-            ) : (
-              <Text
-                fontSize='sm'
-                fontWeight='light'
-                color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-              >
-                No active servers
-              </Text>
-            )}
-          </Box>
+                  <Divider _last={{ display: 'none' }} />
+                </Fragment>
+              ))}
+            </Box>
+          ) : (
+            <Box
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              justifyContent='center'
+              alignContent='center'
+              w='full'
+              gap={0}
+            >
+              <HStack justify='space-between' px={4}>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Active now
+                </Text>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Next maps
+                </Text>
+              </HStack>
+              {[...Array(3)].map((_, idx) => (
+                <Box
+                  key={idx}
+                  width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
+                >
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  >
+                    <Skeleton
+                      height='100px'
+                      startColor={`${
+                        colorMode === 'dark'
+                          ? getDefaultBackgrounds().dark[0]
+                          : getDefaultBackgrounds().light[0]
+                      }75`}
+                      endColor={`${
+                        colorMode === 'dark'
+                          ? getDefaultBackgrounds().dark[1]
+                          : getDefaultBackgrounds().light[1]
+                      }75`}
+                    />
+                  </motion.div>
+                </Box>
+              ))}
+            </Box>
+          )}
         </Flex>
       </Center>
       <Box>

@@ -28,7 +28,7 @@ export async function login(data: LoginUserFormSchema): Promise<LoginResponse> {
     return responseData;
   } catch (error: any) {
     // Handle errors here
-    console.error('Login error:', error); // Log the error for debugging
+    // console.error('Login error:', error); // Log the error for debugging
     throw new Error(error.message || 'Error during login'); // Re-throw a user-friendly error
   }
 }

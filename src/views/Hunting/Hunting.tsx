@@ -260,7 +260,7 @@ const Hunting = () => {
       }
     } catch (error) {
       // Handle any errors gracefully
-      console.error('Error fetching data:', error);
+      // console.error('Error fetching data:', error);
       // Inform the user about the error
     }
   };

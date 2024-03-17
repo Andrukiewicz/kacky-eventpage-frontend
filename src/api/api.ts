@@ -2,7 +2,7 @@ import { LoginUserFormSchema } from '@/components/Header/AuthModal/Login';
 import { RegisterUserFormSchema } from '@/components/Header/AuthModal/Register';
 import { ProfileDataFormSchema } from '@/views/Profile/Profile';
 
-const url = `https://api.kacky.gg`;
+const url = `https://devapi.kacky.gg`;
 
 // let cachedEvents: null | AvailableEvents[] = null;
 

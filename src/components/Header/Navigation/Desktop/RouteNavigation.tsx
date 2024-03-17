@@ -28,7 +28,7 @@ const RouteNavigation = () => {
   });
 
   return (
-    <HStack h='50px'>
+    <HStack h='40px'>
       <Menu autoSelect={false}>
         <Button
           as={NavLink}

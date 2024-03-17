@@ -124,12 +124,7 @@ const App = () => {
       <AuthContext.Provider value={{ authentication, setAuthentication }}>
         <ChakraProvider theme={theme}>
           <Routes>
-            <Route
-              path='/'
-              element={
-                <MainLayout isLoadingEventStatus={isLoadingEventStatus} />
-              }
-            >
+            <Route path='/' element={<MainLayout />}>
               <Route index element={<EventSwitcher event={event} />} />
               <Route path='schedule' element={<Schedule />} />
               <Route path='hunting' element={<Hunting />} />

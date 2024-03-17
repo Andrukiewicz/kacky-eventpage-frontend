@@ -5,8 +5,8 @@ import {
   Flex,
   HStack,
   Text,
-  useTheme,
   VStack,
+  Image,
 } from '@chakra-ui/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,7 +18,6 @@ import { IMAGES } from '@/utils/Images';
 
 // eslint-disable-next-line no-unused-vars
 const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
-  const theme = useTheme();
   const { colorMode } = useColorMode();
 
   const { event } = useContext(EventContext);
@@ -191,10 +190,9 @@ const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
         >
           <HStack>
             <Box position='relative' h={12} w={12}>
-              <Box
-                bgImage={`url(${getMapImageUrl(event.type, maps[0].number)})`}
-                bgSize='cover'
-                bgRepeat='no-repeat'
+              <Image
+                src={getMapImageUrl(event.type, maps[0].number)}
+                // fallback={IMAGES.mapImageFallback}
                 h={12}
                 w={12}
                 objectFit='cover'

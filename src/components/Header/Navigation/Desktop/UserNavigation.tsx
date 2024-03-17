@@ -12,7 +12,7 @@ import {
   useTheme,
   useToast,
 } from '@chakra-ui/react';
-import AuthModal from '../AuthModal/AuthModal';
+import AuthModal from '../../AuthModal/AuthModal';
 import { logoutServer } from '@/api/api';
 import Cookies from 'universal-cookie';
 import { useContext, useEffect } from 'react';

@@ -1,147 +1,23 @@
-import {
-  Box,
-  HStack,
-  Center,
-  useColorMode,
-  useTheme,
-  useBreakpointValue,
-  VStack,
-  Text,
-  Select,
-} from '@chakra-ui/react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Box, VStack, useBreakpointValue } from '@chakra-ui/react';
+import { Outlet } from 'react-router-dom';
 
-import Footer from '@/components/Footer/Footer';
-import KrLogo2023 from '@/assets/logos/krLogo2023';
-import RouteNavigation from '@/components/Header/Navigation/RouteNavigation';
-import UserNavigation from '@/components/Header/Navigation/UserNavigation';
-import { getDefaultBackgrounds } from '@/utils/theme';
-import { useContext } from 'react';
-import EventContext from './context/EventContext';
+import Header from './components/Header/Navigation/Header';
+import HeaderMobile from './components/Header/Navigation/HeaderMobile';
+import Footer from './components/Footer/Footer';
 
-const MainLayout = ({
-  isLoadingEventStatus,
-}: {
-  isLoadingEventStatus: boolean;
-}) => {
-  const theme = useTheme();
-  const { colorMode } = useColorMode();
-  const { event, setEvent } = useContext(EventContext);
-
-  const logoSize = useBreakpointValue({
-    base: '120px',
-    md: '160px',
-    lg: '220px',
-    xl: '200px',
+function ResponsiveHeader() {
+  const content = useBreakpointValue({
+    base: <HeaderMobile />,
+    md: <Header />,
   });
 
+  return content;
+}
+
+const MainLayout = () => {
   return (
     <VStack>
-      <Center
-        as='header'
-        pos='fixed'
-        bottom={{ base: '0', md: 'auto' }}
-        zIndex='sticky'
-        w='100%'
-        height='100%'
-        px={{ base: 0, md: 8 }}
-        h={{ base: '60px', md: 'fit-content' }}
-        bg={
-          colorMode === 'dark'
-            ? getDefaultBackgrounds().dark[1]
-            : getDefaultBackgrounds().light[1]
-        }
-        borderBottom={{ base: 'none', md: '1px solid' }}
-        // outline='1px solid'
-        borderTop={{ base: '1px solid', md: 'none' }}
-        borderColor={
-          colorMode === 'dark'
-            ? 'whiteAlpha.300 !important'
-            : 'blackAlpha.300 !important'
-        }
-        backdropFilter='auto'
-        backdropBlur='16px'
-      >
-        <VStack
-          as='nav'
-          spacing={0}
-          gap={0}
-          h='full'
-          w={{ base: 'full', md: 'container.xl' }}
-        >
-          <HStack justify='space-between' w='full' py={2}>
-            <Box
-              display={{ base: 'none', md: 'block' }}
-              px={{ base: 4, md: 2, lg: 4 }}
-              borderBottom='1px'
-              mt='1px'
-              borderColor={
-                colorMode === 'dark'
-                  ? getDefaultBackgrounds().dark[1]
-                  : getDefaultBackgrounds().light[1]
-              }
-              h='full'
-            >
-              <Box
-                as={NavLink}
-                display='flex'
-                alignContent='end'
-                // mt={{ md: 9, lg: 7, xl: 5 }}
-                filter={theme.shadows.dropGlow}
-                _hover={{
-                  transform: 'scale(1.05)',
-                  transition: 'transform 0.2s ease-in-out', // Combine all transition properties
-                }}
-              >
-                <KrLogo2023
-                  color={colorMode === 'dark' ? 'white' : 'black'}
-                  width={logoSize}
-                />
-              </Box>
-            </Box>
-            <UserNavigation />
-          </HStack>
-          <HStack justify='center' align='end' w='full' h='full' pos='relative'>
-            {event && <RouteNavigation />}
-            {import.meta.env.DEV && !isLoadingEventStatus && (
-              <VStack position='absolute' right={0} gap={0}>
-                <Text fontSize='xs' textTransform='initial'>
-                  Dev event status
-                </Text>
-                <Select
-                  w='fit-content'
-                  size='xs'
-                  variant='outline'
-                  sx={{
-                    '> option': {
-                      background: `
-                ${
-                  colorMode === 'dark'
-                    ? getDefaultBackgrounds().dark[0]
-                    : getDefaultBackgrounds().light[0]
-                }`,
-                    },
-                  }}
-                  value={event.status}
-                  onChange={e => {
-                    setEvent({
-                      ...event,
-                      status: e?.target?.value,
-                    });
-                    localStorage.setItem('eventLiveStatus', e.target.value); // Update localStorage
-                  }}
-                >
-                  <option value='active'>active</option>
-                  <option value='pre'>pre</option>
-                  <option value='post'>post</option>
-                  <option value='offseason'>offseason</option>
-                </Select>
-              </VStack>
-            )}
-          </HStack>
-        </VStack>
-      </Center>
-
+      <ResponsiveHeader />
       <VStack w='full' minH='100vh' justify='space-between'>
         <Box
           as='main'

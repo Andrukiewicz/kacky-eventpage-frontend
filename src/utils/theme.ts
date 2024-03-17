@@ -160,7 +160,7 @@ const theme = extendTheme({
             : getDefaultBackgrounds().lightGradient,
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         fontWeight: 300,
       },
       '&::-webkit-scrollbar': {
@@ -209,7 +209,7 @@ const theme = extendTheme({
         },
         th: {
           fontWeight: 'normal',
-          textTransform: 'uppercase',
+          // textTransform: 'uppercase',
           letterSpacing: 'wider',
           textAlign: 'start',
         },
@@ -332,7 +332,7 @@ const theme = extendTheme({
             props.colorMode === 'dark' ? 'whiteAlpha.300' : 'blackAlpha.300',
         },
         item: {
-          textTransform: 'uppercase',
+          // textTransform: 'uppercase',
           letterSpacing: '0.1em',
           background: props.colorMode === 'dark' ? 'none' : 'none',
           _hover: {
@@ -344,7 +344,7 @@ const theme = extendTheme({
     },
     Button: {
       baseStyle: {
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         letterSpacing: '0.1em',
         fontWeight: 'normal',
       },

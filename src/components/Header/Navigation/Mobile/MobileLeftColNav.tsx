@@ -53,6 +53,29 @@ const MobileLeftColNav = () => {
         {event.status === 'active' && (
           <Button
             as={NavLink}
+            aria-label='Leaderboard'
+            variant='ghost'
+            rounded={10}
+            p={1}
+            h='full'
+            to='/leaderboard'
+            flexDirection={{ base: 'column' }}
+            _activeLink={{
+              bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100',
+            }}
+            letterSpacing={0}
+            filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
+            gap={{ base: 0, md: 0, lg: 2 }}
+          >
+            <MdOutlineDashboard size={iconSize} />
+            <Text fontSize='xs' display={{ base: 'block', md: 'block' }}>
+              Leaderboard
+            </Text>
+          </Button>
+        )}
+        {event.status === 'active' && (
+          <Button
+            as={NavLink}
             aria-label='Schedule'
             variant='ghost'
             rounded={10}
@@ -115,30 +138,6 @@ const MobileLeftColNav = () => {
             WR's
           </Text>
         </Button>
-        {event.status === 'active' ||
-          (event.status === 'post' && (
-            <Button
-              as={NavLink}
-              aria-label='Leaderboard'
-              variant='ghost'
-              rounded={10}
-              p={1}
-              h='full'
-              to='/leaderboard'
-              flexDirection={{ base: 'column' }}
-              _activeLink={{
-                bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100',
-              }}
-              letterSpacing={0}
-              filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
-              gap={{ base: 0, md: 0, lg: 2 }}
-            >
-              <MdOutlineDashboard size={iconSize} />
-              <Text fontSize='xs' display={{ base: 'block', md: 'block' }}>
-                Leaderboard
-              </Text>
-            </Button>
-          ))}
       </Menu>
     </HStack>
   );

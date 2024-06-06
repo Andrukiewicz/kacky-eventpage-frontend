@@ -51,6 +51,26 @@ const RouteNavigation = () => {
         {event.status === 'active' && (
           <Button
             as={NavLink}
+            aria-label='Leaderboard'
+            variant='ghost'
+            roundedBottom={1}
+            h='full'
+            to='/leaderboard'
+            flexDirection={{ base: 'column', lg: 'row' }}
+            _activeLink={{
+              bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100',
+            }}
+            letterSpacing={0}
+            filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
+            gap={{ base: 0, md: 0, lg: 2 }}
+          >
+            <MdOutlineDashboard size={iconSize} />
+            <Text display={{ base: 'none', md: 'block' }}>Leaderboard</Text>
+          </Button>
+        )}
+        {event.status === 'active' && (
+          <Button
+            as={NavLink}
             aria-label='Schedule'
             variant='ghost'
             roundedBottom={1}
@@ -104,27 +124,6 @@ const RouteNavigation = () => {
           <MdBarChart size={iconSize} />
           <Text display={{ base: 'none', md: 'block' }}>WR's</Text>
         </Button>
-        {event.status === 'active' ||
-          (event.status === 'post' && (
-            <Button
-              as={NavLink}
-              aria-label='Leaderboard'
-              variant='ghost'
-              roundedBottom={1}
-              h='full'
-              to='/leaderboard'
-              flexDirection={{ base: 'column', lg: 'row' }}
-              _activeLink={{
-                bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100',
-              }}
-              letterSpacing={0}
-              filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
-              gap={{ base: 0, md: 0, lg: 2 }}
-            >
-              <MdOutlineDashboard size={iconSize} />
-              <Text display={{ base: 'none', md: 'block' }}>Leaderboard</Text>
-            </Button>
-          ))}
       </Menu>
     </HStack>
   );

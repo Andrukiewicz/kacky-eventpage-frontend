@@ -89,11 +89,7 @@ const App = () => {
     }
   };
   // Fetch servers data
-  const {
-    data: eventStatus,
-    isLoading: isLoadingEventStatus,
-    isSuccess: isSuccessEventStatus,
-  } = useQuery({
+  const { data: eventStatus, isSuccess: isSuccessEventStatus } = useQuery({
     queryKey: ['eventstatus'],
     queryFn: async () => await eventLiveState(),
     refetchOnWindowFocus: false,

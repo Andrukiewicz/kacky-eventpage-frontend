@@ -159,6 +159,9 @@ const Dashboard = () => {
             <Flex justify='space-between' align='center'>
               <HStack align='center'>
                 <Image h='2rem' src={IMAGES.favicon} />
+                <Text fontWeight='bold' fontSize='1.2rem'>
+                  Kackiest
+                </Text>
                 <Box m={0} pt={1}>
                   <KrLogo2023
                     color={colorMode === 'dark' ? 'white' : 'black'}
@@ -167,7 +170,7 @@ const Dashboard = () => {
                   />
                 </Box>
                 <Text fontWeight='bold' fontSize='1.2rem'>
-                  Remixed 3
+                  9
                 </Text>
               </HStack>
             </Flex>

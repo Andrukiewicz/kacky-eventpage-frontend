@@ -125,31 +125,45 @@ const defaultColumns = [
     ),
     cell: info => (
       <HStack spacing={1}>
-        <Text
-          visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
-          letterSpacing='0.1em'
-          textShadow='glow'
-          fontSize='lg'
-          fontWeight='medium'
-        >
-          {String(Math.floor(info.getValue() / 60)).padStart(2, '0')}
-        </Text>
-        <Text
-          visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
-          textTransform='lowercase'
-        >
-          h
-        </Text>
-        <Text
-          pl='2'
-          letterSpacing='0.1em'
-          textShadow='glow'
-          fontSize='lg'
-          fontWeight='medium'
-        >
-          {String(info.getValue() % 60).padStart(2, '0')}
-        </Text>
-        <Text textTransform='lowercase'>m</Text>
+        {info.getValue() <= 30 ? (
+          <Text
+            letterSpacing='0.1em'
+            textShadow='glow'
+            fontSize='lg'
+            fontWeight='medium'
+            color={'green.400'}
+          >
+            Live now
+          </Text>
+        ) : (
+          <>
+            <Text
+              visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
+              letterSpacing='0.1em'
+              textShadow='glow'
+              fontSize='lg'
+              fontWeight='medium'
+            >
+              {String(Math.floor(info.getValue() / 60)).padStart(2, '0')}
+            </Text>
+            <Text
+              visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
+              textTransform='lowercase'
+            >
+              h
+            </Text>
+            <Text
+              pl='2'
+              letterSpacing='0.1em'
+              textShadow='glow'
+              fontSize='lg'
+              fontWeight='medium'
+            >
+              {String(info.getValue() % 60).padStart(2, '0')}
+            </Text>
+            <Text textTransform='lowercase'>m</Text>
+          </>
+        )}
       </HStack>
     ),
   }),

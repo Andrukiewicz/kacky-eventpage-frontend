@@ -15,6 +15,7 @@ import {
   MdOutlineDataExploration,
   MdOutlineEvent,
 } from 'react-icons/md';
+import { LuTrophy } from 'react-icons/lu';
 import { NavLink } from 'react-router-dom';
 
 const RouteNavigation = () => {
@@ -51,7 +52,7 @@ const RouteNavigation = () => {
         {event.status === 'active' && (
           <Button
             as={NavLink}
-            aria-label='Leaderboard'
+            aria-label='Ranking'
             variant='ghost'
             roundedBottom={1}
             h='full'
@@ -64,8 +65,8 @@ const RouteNavigation = () => {
             filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
             gap={{ base: 0, md: 0, lg: 2 }}
           >
-            <MdOutlineDashboard size={iconSize} />
-            <Text display={{ base: 'none', md: 'block' }}>Leaderboard</Text>
+            <LuTrophy size={iconSize} />
+            <Text display={{ base: 'none', md: 'block' }}>Ranking</Text>
           </Button>
         )}
         {event.status === 'active' && (

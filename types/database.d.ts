@@ -54,6 +54,7 @@ type ProfileData = {
 type Server = {
   serverNumber: number;
   serverDifficulty: string;
+  serverJoin: string;
   maps: ServerMap[];
   timeLimit: number;
   timeLeft: number;

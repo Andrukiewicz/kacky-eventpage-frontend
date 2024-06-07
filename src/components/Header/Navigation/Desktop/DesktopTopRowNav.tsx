@@ -34,6 +34,7 @@ const DesktopTopRowNav = () => {
           as={NavLink}
           display='flex'
           alignContent='end'
+          to={'/'}
           // mt={{ md: 9, lg: 7, xl: 5 }}
           filter={theme.shadows.dropGlow}
           _hover={{

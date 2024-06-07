@@ -72,17 +72,19 @@ const MapDetailCell = memo<MapDetailCellProps>(
             eventtype={eventtype}
           />
         </Center>
-        <HStack px={4} w='full'>
-          <VStack
+        <HStack w='full' ml={{ base: 0, xl: 3 }}>
+          <HStack
             direction='column'
             justifyContent='space-around'
             align='start'
-            px={2}
-            w='50%'
           >
-            <Flex alignContent='center' align='center' w='full'>
+            <VStack
+              alignContent='start'
+              align='start'
+              w='full'
+              gap={{ base: 2, md: 4 }}
+            >
               <Text
-                width='50%'
                 textShadow='glow'
                 letterSpacing='0.2em'
                 fontSize='lg'
@@ -90,26 +92,53 @@ const MapDetailCell = memo<MapDetailCellProps>(
               >
                 Author:
               </Text>
-              <Text w='50%'>{data.author}</Text>
-            </Flex>
-            <Flex w='full' alignContent='center' align='center'>
+              <Text
+                textShadow='glow'
+                letterSpacing='0.2em'
+                fontSize='lg'
+                fontWeight='400'
+              >
+                World record:
+              </Text>
+              <Text
+                textShadow='glow'
+                letterSpacing='0.2em'
+                fontSize='lg'
+                fontWeight='400'
+              >
+                {authentication.isLoggedIn ? (
+                  <>Personal Best:</>
+                ) : (
+                  <>WR Holder:</>
+                )}
+              </Text>
+            </VStack>
+            <VStack
+              direction='column'
+              justifyContent='space-around'
+              align='start'
+              gap={{ base: 2, md: 4 }}
+            >
+              <Text fontSize='lg' fontWeight='400'>
+                {data.author}
+              </Text>
               <MapWRCell wrScore={data.wrScore} wrHolder={data.wrHolder} />
-            </Flex>
-            {mode === 'minimal' ? null : (
-              <Flex w='full' align='center'>
-                <MapPBCell
-                  personalBest={data.personalBest}
-                  wrHolder={data.wrHolder}
-                  kackyRank={data.kackyRank}
-                />
-              </Flex>
-            )}
-          </VStack>
+              {mode === 'minimal' ? null : (
+                <>
+                  <MapPBCell
+                    personalBest={data.personalBest}
+                    wrHolder={data.wrHolder}
+                    kackyRank={data.kackyRank}
+                  />
+                </>
+              )}
+            </VStack>
+          </HStack>
           <Center h='full'>
             <Divider orientation='vertical' />
           </Center>
           {authentication.isLoggedIn && mode !== 'minimal' ? (
-            <VStack w='50%' align='start' px={2} justifyContent='space-around'>
+            <VStack align='start' px={2} justifyContent='space-around'>
               <Flex alignContent='center' align='center'>
                 <Tooltip
                   label={`Rated Difficulty: ${data.rating}`}

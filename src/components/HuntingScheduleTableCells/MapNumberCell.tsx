@@ -48,6 +48,7 @@ const MapNumberCell = memo<MapNumberCellProps>(
                 visibility: 'visible',
               }}
               icon={<MdOutlineImage fontSize='24px' />}
+              h={'100%'}
             />
             <MapImageModal
               mapNumber={number}

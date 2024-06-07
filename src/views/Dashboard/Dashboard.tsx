@@ -97,6 +97,7 @@ const Dashboard = () => {
           serverNumber: server.serverNumber,
           maps: server.maps,
           serverDifficulty: server.serverDifficulty,
+          serverJoin: server.serverJoin,
           timeLimit: server.timeLimit * 60,
           timeLeft: server.timeLeft + mapChangeEstimate, // Update timeLeft here
         };
@@ -160,17 +161,7 @@ const Dashboard = () => {
               <HStack align='center'>
                 <Image h='2rem' src={IMAGES.favicon} />
                 <Text fontWeight='bold' fontSize='1.2rem'>
-                  Kackiest
-                </Text>
-                <Box m={0} pt={1}>
-                  <KrLogo2023
-                    color={colorMode === 'dark' ? 'white' : 'black'}
-                    height='1.5rem'
-                    width='100%'
-                  />
-                </Box>
-                <Text fontWeight='bold' fontSize='1.2rem'>
-                  9
+                  Kackiest Kacky 9
                 </Text>
               </HStack>
             </Flex>

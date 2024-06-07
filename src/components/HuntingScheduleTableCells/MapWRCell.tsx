@@ -13,16 +13,7 @@ const MapWRCell = memo<MapWRCellProps>(({ wrScore, wrHolder }) => {
 
   return (
     <>
-      <Text
-        width='50%'
-        textShadow='glow'
-        letterSpacing='0.2em'
-        fontSize='lg'
-        fontWeight='400'
-      >
-        World Record:
-      </Text>
-      <Text lineHeight='6' w='50%'>
+      <Text fontSize='lg' fontWeight='400'>
         {wrScore !== 0
           ? DateTime.fromMillis(wrScore).toFormat('mm:ss.SSS')
           : '-'}

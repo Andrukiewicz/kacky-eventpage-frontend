@@ -167,7 +167,7 @@ const Spreadsheet = () => {
   return (
     <Center mb={{ base: 24, md: 8 }} px={{ base: 4, md: 8 }} w='full'>
       <VStack overflow='hidden' spacing={4}>
-        <Heading>
+        <Heading mt={0} className='text-center text'>
           {event.type === 'kk' ? 'Kackiest Kacky' : 'Kacky Reloaded'}{' '}
           {event.edition} Schedule
         </Heading>
@@ -215,6 +215,7 @@ const Spreadsheet = () => {
                           display='flex'
                           gap={2}
                           alignItems='center'
+                          justifyContent={'center'}
                           sx={
                             header.column.getCanSort() && {
                               cursor: 'pointer',
@@ -250,6 +251,10 @@ const Spreadsheet = () => {
                       key={row.id}
                       onClick={() => row.toggleExpanded()}
                       bg={rowBGcolor(row.getIsExpanded())}
+                      _hover={{
+                        cursor: 'pointer',
+                        background: 'white',
+                      }}
                     >
                       {row.getVisibleCells().map(cell => (
                         <Td key={cell.id} background={!row.getIsExpanded()}>

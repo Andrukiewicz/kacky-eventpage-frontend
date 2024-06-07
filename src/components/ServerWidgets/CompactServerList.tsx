@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   Image,
+  Button,
 } from '@chakra-ui/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -15,9 +16,15 @@ import { getMapImageUrl } from '@/api/api';
 // import mapImageFallback from '@/assets/images/mapImageFallback.jpg';
 import EventContext from '@/context/EventContext';
 import { IMAGES } from '@/utils/Images';
+import { NavLink } from 'react-router-dom';
 
 // eslint-disable-next-line no-unused-vars
-const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
+const CompactServerList = ({
+  serverNumber,
+  maps,
+  timeLeft,
+  serverJoin,
+}: Server) => {
   const { colorMode } = useColorMode();
 
   const { event } = useContext(EventContext);
@@ -180,7 +187,24 @@ const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
       </AnimatePresence>
 
       {/* SERVER */}
-      <Center w='full' h='full' py={3} px={4}>
+      <Center w='full' h='full' py={3} px={4} position='relative'>
+        <Button
+          as={NavLink}
+          to={`${serverJoin}`}
+          position='absolute'
+          w='full'
+          h='full'
+          opacity='0'
+          _hover={{ opacity: '80%' }}
+          zIndex={10}
+          fontWeight='bold'
+          bg={colorMode === 'dark' ? 'neutral.800' : 'neutral.200'}
+          textAlign='center'
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+          Connect to server #{serverNumber}
+        </Button>
         <Flex
           direction='row'
           align='center'
@@ -321,7 +345,7 @@ const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
                         as='span'
                         fontWeight='bold'
                         color={
-                          maps[1].finished
+                          maps[0].finished
                             ? colorMode === 'dark'
                               ? 'green.300'
                               : 'green.500'
@@ -402,25 +426,28 @@ const CompactServerList = ({ serverNumber, maps, timeLeft }: Server) => {
                   }}
                   transition={{ ease: 'easeInOut', duration: 0.3 }}
                 >
-                  <VStack gap={0}>
+                  <VStack
+                    gap={0}
+                    textColor={colorMode === 'dark' ? 'white' : 'black'}
+                  >
                     <Text
                       color={
                         maps[1].finished
                           ? colorMode === 'dark'
                             ? 'green.300'
                             : 'green.500'
-                          : 'initial'
+                          : ''
                       }
                     >
                       {maps[1].number}
                     </Text>
                     <Text
                       color={
-                        maps[1].finished
+                        maps[2].finished
                           ? colorMode === 'dark'
                             ? 'green.300'
                             : 'green.500'
-                          : 'initial'
+                          : ''
                       }
                     >
                       {maps[2].number}

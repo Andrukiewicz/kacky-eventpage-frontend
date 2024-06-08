@@ -125,20 +125,10 @@ const defaultColumns = [
     ),
     cell: info => (
       <HStack spacing={1}>
-        {info.getValue() <= 30 ? (
-          <Text
-            letterSpacing='0.1em'
-            textShadow='glow'
-            fontSize='lg'
-            fontWeight='medium'
-            color={'green.400'}
-          >
-            Live now
-          </Text>
-        ) : (
+        {info.getValue() > 0 ? (
           <>
             <Text
-              visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
+              visibility={info.getValue() > 60 ? 'visible' : 'hidden'}
               letterSpacing='0.1em'
               textShadow='glow'
               fontSize='lg'
@@ -163,6 +153,16 @@ const defaultColumns = [
             </Text>
             <Text textTransform='lowercase'>m</Text>
           </>
+        ) : (
+          <Text
+            letterSpacing='0.1em'
+            textShadow='glow'
+            fontSize='lg'
+            fontWeight='medium'
+            color={'green.400'}
+          >
+            Live now
+          </Text>
         )}
       </HStack>
     ),

@@ -58,6 +58,8 @@ type Server = {
   maps: ServerMap[];
   timeLimit: number;
   timeLeft: number;
+  isSuccess: boolean;
+  isLoading: boolean;
 };
 
 type ServerMap = {

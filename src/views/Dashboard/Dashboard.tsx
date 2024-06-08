@@ -72,7 +72,8 @@ const Dashboard = () => {
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ['servers', authentication.token],
     queryFn: () => getDashboardData(authentication.token),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
     retry: false,
   });
 
@@ -100,6 +101,8 @@ const Dashboard = () => {
           serverJoin: server.serverJoin,
           timeLimit: server.timeLimit * 60,
           timeLeft: server.timeLeft + mapChangeEstimate, // Update timeLeft here
+          isLoading: isLoading,
+          isSuccess: isSuccess,
         };
         formattedData.push(formattedServer);
       });
@@ -111,24 +114,22 @@ const Dashboard = () => {
   }, [data, isSuccess]);
 
   useEffect(() => {
-    const counterCopy = [...counter];
+    // const counterCopy = [...counter];
     const timer = setInterval(() => {
-      counter.forEach((_, index) => {
-        if (counterCopy[index] > 0) counterCopy[index] -= 1;
-        if (counterCopy[index] === 0) {
-          newQueryCount.current[index] =
-            (newQueryCount.current[index] + 1) % 20;
-          if (newQueryCount.current[index] === 0) {
-            queryClient.invalidateQueries({ queryKey: ['servers'] });
-          }
-        }
+      const counterCopy = [...counter]; // Create a copy to avoid mutating original state
 
-        if (counter.length - 1 === index) setCounter(counterCopy);
+      counter.forEach((timeLeft, index) => {
+        if (timeLeft > 0) {
+          counterCopy[index] = timeLeft - 1; // Decrement timeLeft for each server
+        }
       });
+
+      // Update the state with the modified counterCopy
+      setCounter(counterCopy);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [counter, queryClient]);
+  }, [counter]);
 
   return (
     <motion.div
@@ -189,6 +190,8 @@ const Dashboard = () => {
                   <CompactServerList
                     {...server}
                     timeLeft={counter[idx] - mapChangeEstimate}
+                    isLoading={isLoading}
+                    isSuccess={isSuccess}
                   />
 
                   <Divider _last={{ display: 'none' }} />

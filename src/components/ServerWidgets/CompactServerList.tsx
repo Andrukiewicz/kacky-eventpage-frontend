@@ -24,6 +24,8 @@ const CompactServerList = ({
   maps,
   timeLeft,
   serverJoin,
+  isLoading,
+  isSuccess,
 }: Server) => {
   const { colorMode } = useColorMode();
 
@@ -56,7 +58,7 @@ const CompactServerList = ({
       ref={divRef}
     >
       <AnimatePresence>
-        {timeLeft <= 0 && (
+        {timeLeft < 3 && (
           <motion.div
             key={serverNumber + 'loader'}
             initial={{
@@ -86,7 +88,7 @@ const CompactServerList = ({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {timeLeft <= 0 && (
+        {timeLeft < 3 && (
           <motion.svg
             style={{ position: 'absolute' }}
             width={dimensions.width + 'px'}
@@ -196,9 +198,13 @@ const CompactServerList = ({
           h='full'
           opacity='0'
           _hover={{ opacity: '80%' }}
-          zIndex={10}
+          zIndex={100}
           fontWeight='bold'
-          bg={colorMode === 'dark' ? 'neutral.800' : 'neutral.200'}
+          bg={
+            colorMode === 'dark'
+              ? 'neutral.800 !important'
+              : 'neutral.200 !important'
+          }
           textAlign='center'
           alignItems={'center'}
           justifyContent={'center'}
@@ -222,7 +228,7 @@ const CompactServerList = ({
                 objectFit='cover'
                 position='absolute'
                 rounded='full'
-                filter={timeLeft <= 0 ? 'grayscale(100%)' : 'grayscale(0%)'}
+                filter={timeLeft < 3 ? 'grayscale(100%)' : 'grayscale(0%)'}
               />
               <Box position='absolute' bottom={0} right={0}>
                 <Box
@@ -245,7 +251,7 @@ const CompactServerList = ({
                   }
                 >
                   <AnimatePresence mode='wait'>
-                    {timeLeft <= 0 ? (
+                    {timeLeft < 3 ? (
                       <Box
                         as={motion.div}
                         key={serverNumber + 'statusloading'}
@@ -271,26 +277,30 @@ const CompactServerList = ({
                         w={4}
                       />
                     ) : (
-                      <Box
-                        as={motion.div}
-                        key={serverNumber + 'statusready'}
-                        initial={{
-                          opacity: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          transition: { ease: 'backInOut', duration: 0.3 },
-                        }}
-                        exit={{
-                          opacity: 0,
-                          transition: { ease: 'easeOut', duration: 0.3 },
-                        }}
-                        rounded='full'
-                        bg='green.600'
-                        position='absolute'
-                        h={4}
-                        w={4}
-                      />
+                      <>
+                        {isSuccess && (
+                          <Box
+                            as={motion.div}
+                            key={serverNumber + 'statusready'}
+                            initial={{
+                              opacity: 0,
+                            }}
+                            animate={{
+                              opacity: 1,
+                              transition: { ease: 'backInOut', duration: 0.3 },
+                            }}
+                            exit={{
+                              opacity: 0,
+                              transition: { ease: 'easeOut', duration: 0.3 },
+                            }}
+                            rounded='full'
+                            bg='green.600'
+                            position='absolute'
+                            h={4}
+                            w={4}
+                          />
+                        )}
+                      </>
                     )}
                   </AnimatePresence>
                 </Box>
@@ -304,10 +314,10 @@ const CompactServerList = ({
             >
               <Text fontWeight='medium'>Server {serverNumber}</Text>
               <AnimatePresence mode='wait'>
-                {timeLeft <= 0 ? (
+                {timeLeft < 3 ? (
                   <motion.div
-                    key={'mapnumberloading'}
-                    initial={{ opacity: 0 }} // Start slightly enlarged
+                    key={'mapnumberloadingserver'}
+                    initial={{ opacity: 0 }} // Start with 0 opacity
                     animate={{
                       opacity: 1,
                     }}
@@ -321,48 +331,52 @@ const CompactServerList = ({
                     </Text>
                   </motion.div>
                 ) : (
-                  <motion.div
-                    key={'mapnumberready'}
-                    initial={{ opacity: 0 }} // Start slightly enlarged
-                    animate={{
-                      opacity: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                    }}
-                    transition={{ ease: 'easeInOut', duration: 0.3 }}
-                  >
-                    <HStack
-                      fontWeight='thin'
-                      gap={2}
-                      color={
-                        colorMode === 'dark' ? 'neutral.400' : 'neutral.700'
-                      }
-                      align='end'
-                    >
-                      <Text as='span'>Map</Text>
-                      <Text
-                        as='span'
-                        fontWeight='bold'
-                        color={
-                          maps[0].finished
-                            ? colorMode === 'dark'
-                              ? 'green.300'
-                              : 'green.500'
-                            : ''
-                        }
+                  <>
+                    {isSuccess && (
+                      <motion.div
+                        key={'mapnumberready'}
+                        initial={{ opacity: 0 }} // Start with 0 opacity
+                        animate={{
+                          opacity: 1,
+                        }}
+                        exit={{
+                          opacity: 0,
+                        }}
+                        transition={{ ease: 'easeInOut', duration: 0.3 }}
                       >
-                        {maps[0].number}
-                      </Text>
-                      <Text
-                        fontSize='xs'
-                        display={{ base: 'none', sm: 'block' }}
-                      >
-                        {' '}
-                        by {maps[0].author}{' '}
-                      </Text>
-                    </HStack>
-                  </motion.div>
+                        <HStack
+                          fontWeight='thin'
+                          gap={2}
+                          color={
+                            colorMode === 'dark' ? 'neutral.400' : 'neutral.700'
+                          }
+                          align='end'
+                        >
+                          <Text as='span'>Map</Text>
+                          <Text
+                            as='span'
+                            fontWeight='bold'
+                            color={
+                              maps[0].finished
+                                ? colorMode === 'dark'
+                                  ? 'green.300'
+                                  : 'green.500'
+                                : ''
+                            }
+                          >
+                            {maps[0].number}
+                          </Text>
+                          <Text
+                            fontSize='xs'
+                            display={{ base: 'none', sm: 'block' }}
+                          >
+                            {' '}
+                            by {maps[0].author}{' '}
+                          </Text>
+                        </HStack>
+                      </motion.div>
+                    )}
+                  </>
                 )}
               </AnimatePresence>
             </VStack>
@@ -377,7 +391,7 @@ const CompactServerList = ({
               {timeLeft < 3 ? (
                 <motion.div
                   key={'timerrestarting'}
-                  initial={{ opacity: 0 }} // Start slightly enlarged
+                  initial={{ opacity: 0 }} // Start with 0 opacity
                   animate={{
                     opacity: 1,
                   }}
@@ -393,7 +407,7 @@ const CompactServerList = ({
               ) : (
                 <motion.div
                   key={'timerrunning'}
-                  initial={{ opacity: 0 }} // Start slightly enlarged
+                  initial={{ opacity: 0 }} // Start with 0 opacity
                   animate={{
                     opacity: 1,
                   }}
@@ -416,8 +430,8 @@ const CompactServerList = ({
             <VStack>
               <AnimatePresence mode='wait'>
                 <motion.div
-                  key={'mapnumberloading'}
-                  initial={{ opacity: 0 }} // Start slightly enlarged
+                  key={'mapnumberloadingnext'}
+                  initial={{ opacity: 0 }} // Start with 0 opacity
                   animate={{
                     opacity: 1,
                   }}

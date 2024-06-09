@@ -218,7 +218,7 @@ const ServerCard = ({
                     </svg>
                   </Box>
                 </Flex>
-                <Flex direction='column' align='flex-start' gap={2}>
+                <Flex direction='column' align='flex-start' w='full' gap={2}>
                   {maps.slice(1).map((map: ServerMap, index: number) => (
                     <HStack
                       onClick={nextMapModals[index].onOpen}
@@ -236,7 +236,7 @@ const ServerCard = ({
                         fontSize='2xl'
                         letterSpacing='0.1em'
                         textShadow='glow'
-                        w='100%'
+                        w='3.5rem'
                       >
                         {map.number}
                       </Text>

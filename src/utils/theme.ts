@@ -240,10 +240,10 @@ const theme = extendTheme({
               color: 'neutral.900',
               borderColor: 'neutral.300',
               _hover: {
-                bg: 'neutral.300',
+                bg: 'neutral.200',
               },
               _even: {
-                bg: 'neutral.600',
+                bg: 'neutral.100',
               },
               _odd: {
                 bg: 'neutral.200',

@@ -153,13 +153,13 @@ const Spreadsheet = () => {
 
   const columnFilterValue = table
     .getHeaderGroups()[0]
-    .headers[1].column.getFilterValue();
+    .headers[2].column.getFilterValue();
 
   const { colorMode } = useColorMode();
 
   const rowBGcolor = toggled => {
     if (toggled) {
-      return colorMode === 'dark' ? 'grey' : 'lightgrey';
+      return colorMode === 'dark' ? 'light' : 'dark';
     }
     return colorMode;
   };
@@ -177,11 +177,10 @@ const Spreadsheet = () => {
           </Text>
           <Input
             w={20}
-            value={columnFilterValue ?? ''}
             onChange={e =>
               table
                 .getHeaderGroups()[0]
-                .headers[1].column.setFilterValue(e.target.value)
+                .headers[2].column.setFilterValue(String(e.target.value))
             }
             placeholder='#000'
           />
@@ -192,7 +191,7 @@ const Spreadsheet = () => {
           borderWidth='1px'
           borderRadius='md'
         >
-          <Table size='sm'>
+          <Table size='sm' data-type='Table' variant='simple'>
             <Thead>
               {table.getHeaderGroups().map(headerGroup => (
                 <Tr key={headerGroup.id}>
@@ -200,14 +199,15 @@ const Spreadsheet = () => {
                     <Th
                       key={header.id}
                       colSpan={header.colSpan}
+                      px={{ base: '1', md: '2', lg: '3' }}
                       style={{
                         width:
                           header.id === 'finished'
-                            ? 16
+                            ? 8
                             : header.id === 'difficulty' ||
                                 header.id === 'number'
                               ? 100
-                              : undefined,
+                              : 'auto',
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -233,7 +233,10 @@ const Spreadsheet = () => {
                             desc: <Icon w={4} h={4} as={MdArrowDownward} />,
                           }[header.column.getIsSorted()] ??
                             (header.column.getCanSort() ? (
-                              <Box w={4} h={4} />
+                              <Box
+                                w={{ base: 2, md: 3, lg: 3 }}
+                                h={{ base: 2, md: 3, lg: 3 }}
+                              />
                             ) : null)}
                         </Box>
                       )}
@@ -253,11 +256,16 @@ const Spreadsheet = () => {
                       bg={rowBGcolor(row.getIsExpanded())}
                       _hover={{
                         cursor: 'pointer',
-                        background: 'white',
                       }}
+                      alignItems='center'
+                      justifyItems='center'
                     >
                       {row.getVisibleCells().map(cell => (
-                        <Td key={cell.id} background={!row.getIsExpanded()}>
+                        <Td
+                          px={{ base: '1', md: '2', lg: '3' }}
+                          key={cell.id}
+                          background={!row.getIsExpanded()}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

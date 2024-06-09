@@ -43,11 +43,12 @@ const MapDifficultyCell = memo<MapDifficultyCellProps>(
   ({ difficulty, eventtype, rowIndex, table, mapId }) => {
     const { authentication } = useContext(AuthContext);
     const [renderMenuList, setRenderMenuList] = useState(false);
+    const [newDifficulty, setNewDifficulty] = useState(difficulty);
 
     const toast = useToast();
 
     // Type annotation for newDifficulty
-    let newDifficulty: number;
+    // let newDifficulty: number;
     const mutation = useMutation({
       mutationKey: ['postSpreadsheetMapDifficulty'],
       mutationFn: async (data: MapDifficultyCellSubmitProps) => {
@@ -69,7 +70,7 @@ const MapDifficultyCell = memo<MapDifficultyCellProps>(
 
     const onSubmit: SubmitHandler<MapDifficultyCellSubmitProps> = data => {
       if (typeof data.diff !== 'undefined') {
-        newDifficulty = data.diff;
+        setNewDifficulty(data.diff);
       }
       mutation.mutateAsync(data);
     };
@@ -86,10 +87,10 @@ const MapDifficultyCell = memo<MapDifficultyCellProps>(
           borderRadius='none'
         >
           <Badge
-            variant={diffBadgeColorArr[difficulty].variant}
+            variant={diffBadgeColorArr[newDifficulty].variant}
             fontSize='medium'
           >
-            {diffBadgeColorArr[difficulty].text}
+            {diffBadgeColorArr[newDifficulty].text}
           </Badge>
         </MenuButton>
         {renderMenuList ? (

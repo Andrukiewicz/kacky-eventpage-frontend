@@ -24,18 +24,16 @@ const MapNumberCell = memo<MapNumberCellProps>(
 
     return (
       <HStack
-        w='100px'
+        w='80px'
         onMouseEnter={() => setRenderImage(true)}
         onMouseLeave={() => setRenderImage(false)}
         role='group'
-        spacing={4}
+        spacing={1}
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
       >
-        <Text
-          letterSpacing='0.1em'
-          textShadow='glow'
-          fontSize='xl'
-          fontWeight='700'
-        >
+        <Text letterSpacing='0.1em' textShadow='glow' fontWeight='700'>
           {number} {version}
         </Text>
         {eventtype !== 'hunting' && renderImage ? (

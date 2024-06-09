@@ -32,7 +32,7 @@ interface PBData {
 
 export interface FormattedMap {
   finished: boolean;
-  number: number;
+  number: string;
   version: string;
   author: string;
   difficulty: number;
@@ -58,7 +58,7 @@ export function mergeSheetsAndPBs(
   sheet.forEach(map => {
     const formattedMap: FormattedMap = {
       finished: map.finished || false,
-      number: map.kacky_id, // .toString()
+      number: map.kacky_id.toString(), // .toString()
       version: map.version || '',
       author: map.author,
       difficulty: map.map_diff || 0,

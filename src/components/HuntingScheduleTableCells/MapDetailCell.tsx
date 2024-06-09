@@ -74,38 +74,24 @@ const MapDetailCell = memo<MapDetailCellProps>(
         </Center>
         <HStack w='full' ml={{ base: 0, xl: 3 }}>
           <HStack
-            direction='column'
             justifyContent='space-around'
-            align='start'
+            align='center'
+            h='8rem'
+            textShadow='glow'
+            letterSpacing='0.2em'
+            fontSize='lg'
+            fontWeight='400'
           >
             <VStack
-              alignContent='start'
               align='start'
+              justifyContent='space-around'
               w='full'
-              gap={{ base: 2, md: 4 }}
+              h='fit'
+              gap={{ base: 3, md: 6 }}
             >
-              <Text
-                textShadow='glow'
-                letterSpacing='0.2em'
-                fontSize='lg'
-                fontWeight='400'
-              >
-                Author:
-              </Text>
-              <Text
-                textShadow='glow'
-                letterSpacing='0.2em'
-                fontSize='lg'
-                fontWeight='400'
-              >
-                World record:
-              </Text>
-              <Text
-                textShadow='glow'
-                letterSpacing='0.2em'
-                fontSize='lg'
-                fontWeight='400'
-              >
+              <Text>Author:</Text>
+              <Text>World record:</Text>
+              <Text>
                 {authentication.isLoggedIn ? (
                   <>Personal Best:</>
                 ) : (
@@ -114,10 +100,11 @@ const MapDetailCell = memo<MapDetailCellProps>(
               </Text>
             </VStack>
             <VStack
-              direction='column'
-              justifyContent='space-around'
               align='start'
-              gap={{ base: 2, md: 4 }}
+              justifyContent='space-around'
+              w='full'
+              h='fit'
+              gap={{ base: 3, md: 6 }}
             >
               <Text fontSize='lg' fontWeight='400'>
                 {data.author}
@@ -138,21 +125,41 @@ const MapDetailCell = memo<MapDetailCellProps>(
             <Divider orientation='vertical' />
           </Center>
           {authentication.isLoggedIn && mode !== 'minimal' ? (
-            <VStack align='start' px={2} justifyContent='space-around'>
-              <Flex alignContent='center' align='center'>
+            <HStack
+              px={2}
+              justifyContent='space-around'
+              align='center'
+              textShadow='glow'
+              letterSpacing='0.2em'
+              fontSize='lg'
+              fontWeight='400'
+              h='fit'
+            >
+              <VStack
+                align='start'
+                justifyContent='space-between'
+                w='full'
+                h='full'
+                gap={{ base: 3, md: 6 }}
+              >
                 <Tooltip
                   label={`Rated Difficulty: ${data.rating}`}
                   placement='top'
                 >
-                  <Text
-                    textShadow='glow'
-                    letterSpacing='0.2em'
-                    fontSize='lg'
-                    fontWeight='400'
-                  >
-                    Difficulty:
-                  </Text>
+                  <Text>Difficulty:</Text>
                 </Tooltip>
+                <Text>Your clip:</Text>
+                <Text display={mode === 'hunting' ? 'none' : 'inherit'}>
+                  Discord Alarm:
+                </Text>
+              </VStack>
+              <VStack
+                alignContent='center'
+                align='center'
+                w='full'
+                h='fit'
+                gap={{ base: 3, md: 4 }}
+              >
                 <MapDifficultyCell
                   difficulty={data.difficulty}
                   mapId={data.number}
@@ -161,17 +168,6 @@ const MapDetailCell = memo<MapDetailCellProps>(
                   table={table}
                   rowIndex={rowIndex}
                 />
-              </Flex>
-              <Flex height='40px' align='center'>
-                <Text
-                  width='200px'
-                  textShadow='glow'
-                  letterSpacing='0.2em'
-                  fontSize='lg'
-                  fontWeight='400'
-                >
-                  Your clip:
-                </Text>
                 <MapClipCell
                   default_clip={data.default_clip}
                   clip={data.clip}
@@ -181,23 +177,11 @@ const MapDetailCell = memo<MapDetailCellProps>(
                   rowIndex={rowIndex}
                   table={table}
                 />
-              </Flex>
-              <Flex
-                alignContent='center'
-                height='40px'
-                align='center'
-                display={mode === 'hunting' ? 'none' : 'inherit'}
-              >
-                <Box>
-                  <Text
-                    width='200px'
-                    textShadow='glow'
-                    letterSpacing='0.2em'
-                    fontSize='lg'
-                    fontWeight='400'
-                  >
-                    Discord Alarm:
-                  </Text>
+                <Flex
+                  alignContent='center'
+                  align='center'
+                  display={mode === 'hunting' ? 'none' : 'inherit'}
+                >
                   <MapDiscordCell
                     discordPing={data.discordPing}
                     eventtype={eventtype}
@@ -206,9 +190,9 @@ const MapDetailCell = memo<MapDetailCellProps>(
                     rowIndex={rowIndex}
                     mapId={data.number}
                   />
-                </Box>
-              </Flex>
-            </VStack>
+                </Flex>
+              </VStack>
+            </HStack>
           ) : mode === 'minimal' ? null : (
             <Flex
               marginLeft='20'
@@ -220,15 +204,7 @@ const MapDetailCell = memo<MapDetailCellProps>(
                   label={`Rated Difficulty: ${data.rating}`}
                   placement='start'
                 >
-                  <Text
-                    width='200px'
-                    textShadow='glow'
-                    letterSpacing='0.2em'
-                    fontSize='lg'
-                    fontWeight='400'
-                  >
-                    Difficulty:
-                  </Text>
+                  <Text>Difficulty:</Text>
                 </Tooltip>
                 <MapDifficultyCell
                   difficulty={data.difficulty}

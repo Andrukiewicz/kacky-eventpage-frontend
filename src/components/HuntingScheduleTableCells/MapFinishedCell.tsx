@@ -23,8 +23,8 @@ const MapFinishedCell = memo<Props>(({ finished }) => {
             ? 'green.500'
             : 'blackAlpha.200'
       }
-      boxSize='20px'
-      alignSelf='flex-start'
+      boxSize={{ base: '16px', lg: '20px' }}
+      alignSelf={'center'}
       filter={
         colorMode === 'dark' && finished
           ? theme.shadows.finGlowDark

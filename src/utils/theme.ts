@@ -200,6 +200,7 @@ const theme = extendTheme({
       }),
     },
     Table: {
+      parts: ['th', 'td'],
       // eslint-disable-next-line no-unused-vars
       baseStyle: (props: ColorModeProps) => ({
         table: {
@@ -225,22 +226,42 @@ const theme = extendTheme({
         simple: {
           th: {
             bg: 'neutral.200',
-            color: 'blackAlpha.900',
-            borderColor: 'blackAlpha.300',
+            color: 'neutral.900',
+            borderColor: 'neutral.200',
             _dark: {
               bg: 'neutral.800',
               color: 'neutral.100',
-              borderColor: 'whiteAlpha.100',
+              borderColor: 'neutral.800',
             },
           },
           tr: {
-            bg: 'neutral.100',
-            color: 'blackAlpha.900',
-            borderColor: 'blackAlpha.300',
+            _light: {
+              bg: 'neutral.100',
+              color: 'neutral.900',
+              borderColor: 'neutral.300',
+              _hover: {
+                bg: 'neutral.300',
+              },
+              _even: {
+                bg: 'neutral.600',
+              },
+              _odd: {
+                bg: 'neutral.200',
+              },
+            },
             _dark: {
               bg: 'neutral.900',
               color: 'neutral.100',
-              borderColor: 'whiteAlpha.100',
+              borderColor: 'neutral.800',
+              _hover: {
+                bg: 'neutral.800',
+              },
+              _even: {
+                bg: 'neutral.800',
+              },
+              _odd: {
+                bg: 'neutral.900',
+              },
             },
           },
         },

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useContext, memo } from 'react';
+import { useContext, memo, useState } from 'react';
 
 import { Switch, useToast } from '@chakra-ui/react';
 
@@ -19,10 +19,10 @@ type MapDiscordCellProps = {
 const MapDiscordCell = memo<MapDiscordCellProps>(
   ({ discordPing, eventtype, rowIndex, table, mapId }) => {
     const { authentication } = useContext(AuthContext);
-
+    const [alarmState, setAlarmState] = useState(discordPing);
     const toast = useToast();
 
-    let alarmState = discordPing;
+    // let alarmState = discordPing;
     const mutation = useMutation({
       mutationKey: ['postMapClipCell'],
       mutationFn: async (data: MapDifficultyCellSubmitProps) => {
@@ -45,7 +45,7 @@ const MapDiscordCell = memo<MapDiscordCellProps>(
     // Cork doesnt want the actual value xdd
     // eslint-disable-next-line no-unused-vars
     function onSubmit() {
-      alarmState = !alarmState;
+      setAlarmState(!alarmState); // Update state with opposite value
       const data = {
         mapid: mapId,
         alarm: alarmState,

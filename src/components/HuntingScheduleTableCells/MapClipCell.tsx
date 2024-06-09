@@ -71,8 +71,7 @@ const MapClipCell = memo<MapClipCellProps>(
 
     return (
       <HStack
-        w='100px'
-        h='40px'
+        w='full'
         onMouseEnter={() => setRenderPopOver(true)}
         onMouseLeave={() => setRenderPopOver(true)}
       >
@@ -87,14 +86,18 @@ const MapClipCell = memo<MapClipCellProps>(
               href={clip}
               target='_blank'
               rel='noopener noreferrer'
+              p='0'
             >
               <IconButton
                 aria-label='popover button'
                 disabled={clip === '' || !authentication.isLoggedIn}
                 icon={<MdOutlinePlayCircle fontSize='24px' />}
+                h='2rem'
+                w='2rem'
+                minW='2rem'
+                padding='0'
               />
             </Link>
-
             <Popover
               placement='right'
               onOpen={onOpen}
@@ -104,6 +107,9 @@ const MapClipCell = memo<MapClipCellProps>(
               <PopoverTrigger>
                 <IconButton
                   aria-label='popover button edit outline'
+                  h='2rem'
+                  w='2rem'
+                  minW='2rem'
                   disabled={!authentication.isLoggedIn}
                   onClick={onOpen}
                   icon={

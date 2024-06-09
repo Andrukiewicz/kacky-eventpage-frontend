@@ -1,4 +1,4 @@
-import { Icon, Text, HStack, Badge } from '@chakra-ui/react';
+import { Icon, Text, HStack, Badge, Flex } from '@chakra-ui/react';
 
 import {
   MdOutlineCheckCircle,
@@ -40,9 +40,14 @@ const diffColorArr = [
 const defaultColumns = [
   columnHelper.accessor('finished', {
     id: 'finished',
-    width: '20rem',
-    header: () => <Icon boxSize='16px' as={MdOutlineCheckCircle} />,
-    cell: info => <MapFinishedCell finished={info.getValue()} />,
+    header: () => (
+      <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdOutlineCheckCircle} />
+    ),
+    cell: info => (
+      <Flex align={'center'} justify={'center'}>
+        <MapFinishedCell finished={info.getValue()} />
+      </Flex>
+    ),
     sortingFn: (rowA, rowB) => {
       if (
         rowA.getValue('finished') + rowA.getValue('difficulty') / 10 >
@@ -61,11 +66,13 @@ const defaultColumns = [
   }),
   columnHelper.accessor('difficulty', {
     id: 'difficulty',
-    header: () => <Icon boxSize='16px' as={MdTimeline} />,
+    header: () => (
+      <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdTimeline} />
+    ),
     cell: info => (
-      <Badge variant={diffColorArr[info.getValue().toString()]}>
-        &nbsp;&nbsp;
-      </Badge>
+      <Flex align={'center'} justify={'center'}>
+        <Badge variant={diffColorArr[info.getValue()]}>&nbsp;&nbsp;</Badge>
+      </Flex>
     ),
     sortingFn: (rowA, rowB) => {
       if (
@@ -86,16 +93,21 @@ const defaultColumns = [
   columnHelper.accessor('number', {
     id: 'number',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdTag} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Map</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdTag} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Map</Text>
+      </Flex>
     ),
     cell: info => (
       <MapNumberCell
         author={info.row.original.author}
         finished={info.row.original.finished}
-        number={info.getValue().toString()}
+        number={info.getValue()}
         version={info.row.original.version}
       />
     ),
@@ -103,14 +115,22 @@ const defaultColumns = [
   columnHelper.accessor('author', {
     id: 'author',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdLabelOutline} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Author</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdLabelOutline} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Author</Text>
+      </Flex>
     ),
     cell: info => (
-      <Text letterSpacing='0.1em' textShadow='glow' fontSize='l'>
-        {' '}
+      <Text
+        letterSpacing='0.1em'
+        textShadow='glow'
+        fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+      >
         {info.getValue().toString()}
       </Text>
     ),
@@ -118,51 +138,36 @@ const defaultColumns = [
   columnHelper.accessor('upcomingIn', {
     id: 'upcomingIn',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdAccessTime} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Upcoming In</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdAccessTime} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Upcoming</Text>
+      </Flex>
     ),
     cell: info => (
-      <HStack spacing={1}>
+      <HStack
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm', md: 'md' }}
+        fontWeight='medium'
+        letterSpacing='0.1em'
+        textShadow='glow'
+      >
         {info.getValue() > 0 ? (
-          <>
-            <Text
-              visibility={info.getValue() > 60 ? 'visible' : 'hidden'}
-              letterSpacing='0.1em'
-              textShadow='glow'
-              fontSize='lg'
-              fontWeight='medium'
-            >
+          <Flex align={'center'} justify={'center'}>
+            <Text display={info.getValue() >= 60 ? 'block' : 'none'}>
               {String(Math.floor(info.getValue() / 60)).padStart(2, '0')}
             </Text>
-            <Text
-              visibility={info.getValue() >= 60 ? 'visible' : 'hidden'}
-              textTransform='lowercase'
-            >
-              h
-            </Text>
-            <Text
-              pl='2'
-              letterSpacing='0.1em'
-              textShadow='glow'
-              fontSize='lg'
-              fontWeight='medium'
-            >
-              {String(info.getValue() % 60).padStart(2, '0')}
-            </Text>
-            <Text textTransform='lowercase'>m</Text>
-          </>
+            <Text display={info.getValue() >= 60 ? 'block' : 'none'}>h</Text>
+            <Text pl={1}>{String(info.getValue() % 60).padStart(2, '0')}</Text>
+            <Text>m</Text>
+          </Flex>
         ) : (
-          <Text
-            letterSpacing='0.1em'
-            textShadow='glow'
-            fontSize='lg'
-            fontWeight='medium'
-            color={'green.400'}
-          >
-            Live now
-          </Text>
+          <Text color={'green.400'}>Live now</Text>
         )}
       </HStack>
     ),
@@ -170,17 +175,30 @@ const defaultColumns = [
   columnHelper.accessor('server', {
     id: 'server',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdOutlineDns} />
-        <Text display={{ base: 'none', lg: 'inline' }}>On Server</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdOutlineDns} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Server</Text>
+      </Flex>
     ),
     cell: info => (
-      <HStack>
-        <Text textShadow='glow' fontSize='lg' fontWeight='hairline'>
+      <HStack align={'center'} justify={'center'}>
+        <Text
+          textShadow='glow'
+          fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+          fontWeight='hairline'
+        >
           #
         </Text>
-        <Text textShadow='glow' fontSize='lg' fontWeight='medium'>
+        <Text
+          textShadow='glow'
+          fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+          fontWeight='medium'
+        >
           {info.getValue()}
         </Text>
       </HStack>
@@ -189,29 +207,51 @@ const defaultColumns = [
   columnHelper.accessor('personalBest', {
     id: 'personalBest',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdAccessTime} />
-        <Text display={{ base: 'none', lg: 'inline' }}>PB</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdAccessTime} />
+        <Text display={{ base: 'none', xl: 'inline' }}>PB</Text>
+      </Flex>
     ),
     cell: info => (
-      <Text letterSpacing='0.1em' textShadow='glow'>
-        {info.getValue() !== 0
-          ? DateTime.fromMillis(info.getValue()).toFormat('mm:ss.SSS')
-          : '-'}
-      </Text>
+      <Flex align={'center'} justify={'center'}>
+        <Text
+          letterSpacing='0.1em'
+          textShadow='glow'
+          fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+          fontWeight='medium'
+        >
+          {info.getValue() !== 0
+            ? DateTime.fromMillis(info.getValue()).toFormat('mm:ss.SSS')
+            : '-'}
+        </Text>
+      </Flex>
     ),
   }),
   columnHelper.accessor('wrScore', {
     id: 'wrScore',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdStars} />
-        <Text display={{ base: 'none', lg: 'inline' }}>WR</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdStars} />
+        <Text display={{ base: 'none', xl: 'inline' }}>WR</Text>
+      </Flex>
     ),
     cell: info => (
-      <Text letterSpacing='0.1em' textShadow='glow'>
+      <Text
+        letterSpacing='0.1em'
+        textShadow='glow'
+        fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+        fontWeight='medium'
+      >
         {info.getValue() !== 0
           ? DateTime.fromMillis(info.getValue()).toFormat('mm:ss.SSS')
           : '-'}
@@ -221,13 +261,23 @@ const defaultColumns = [
   columnHelper.accessor('wrHolder', {
     id: 'wrHolder',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdStars} />
-        <Text display={{ base: 'none', lg: 'inline' }}>WR Holder</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdStars} />
+        <Text display={{ base: 'none', xl: 'inline' }}>WR Holder</Text>
+      </Flex>
     ),
     cell: info => (
-      <Text letterSpacing='0.1em' textShadow='glow'>
+      <Text
+        letterSpacing='0.1em'
+        textShadow='glow'
+        fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+        fontWeight='medium'
+      >
         {info.getValue() !== '' ? info.getValue() : '-'}
       </Text>
     ),
@@ -235,17 +285,33 @@ const defaultColumns = [
   columnHelper.accessor('kackyRank', {
     id: 'kackyRank',
     header: () => (
-      <>
-        <Icon boxSize='16px' as={MdOutlineLeaderboard} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Local</Text>
-      </>
+      <Flex
+        align={'center'}
+        justify={'center'}
+        fontSize={{ base: 'sm' }}
+        gap={1}
+      >
+        <Icon
+          boxSize={{ base: '16px', lg: '20px' }}
+          as={MdOutlineLeaderboard}
+        />
+        <Text display={{ base: 'none', xl: 'inline' }}>Local</Text>
+      </Flex>
     ),
     cell: info => (
-      <HStack>
-        <Text textShadow='glow' fontSize='lg' fontWeight='hairline'>
+      <HStack align={'center'} justify={'center'}>
+        <Text
+          textShadow='glow'
+          fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+          fontWeight='hairline'
+        >
           {info.getValue() !== 0 ? '#' : ''}
         </Text>
-        <Text textShadow='glow' fontSize='lg' fontWeight='medium'>
+        <Text
+          textShadow='glow'
+          fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
+          fontWeight='medium'
+        >
           {info.getValue() !== 0 ? info.getValue() : '-'}
         </Text>
       </HStack>
@@ -255,8 +321,8 @@ const defaultColumns = [
     id: 'clip',
     header: () => (
       <>
-        <Icon boxSize='16px' as={MdOutlinePlayCircle} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Clip</Text>
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={MdOutlinePlayCircle} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Clip</Text>
       </>
     ),
     cell: info => (
@@ -272,8 +338,8 @@ const defaultColumns = [
     id: 'discordPing',
     header: () => (
       <>
-        <Icon boxSize='16px' as={FaDiscord} />
-        <Text display={{ base: 'none', lg: 'inline' }}>Ping</Text>
+        <Icon boxSize={{ base: '16px', lg: '20px' }} as={FaDiscord} />
+        <Text display={{ base: 'none', xl: 'inline' }}>Ping</Text>
       </>
     ),
     cell: info => (

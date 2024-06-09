@@ -1,6 +1,7 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
+import { resetPasswordStep1 } from '@/api/api';
 import {
   VStack,
   FormControl,
@@ -9,13 +10,10 @@ import {
   FormErrorMessage,
   Button,
   Flex,
-  Text,
   useToast,
   FormHelperText,
   Heading,
 } from '@chakra-ui/react';
-
-import { resetPasswordStep1 } from '@/api/api';
 
 // Define Zod schema for input validation
 const validationSchema = z.object({
@@ -99,12 +97,14 @@ const ResetPassword = ({ setMode }: { setMode: (mode: string) => void }) => {
       <Heading m={0} textShadow='glow' letterSpacing='0.1em' fontSize='xl'>
         Reset Password
       </Heading>
-      <VStack spacing={6} w='full' as='form' onSubmit={handleSubmit(onSubmit)}>
+      <VStack spacing={6} w='full'>
         <FormControl isInvalid={Boolean(errors.user)}>
           <FormLabel>Username</FormLabel>
           <Input
+            {...register('user')}
+            id='username'
             placeholder=''
-            {...register('user')} // assign value to the react hook form
+            autoComplete='username'
           />
           {!errors.user ? (
             <FormHelperText>Enter your username here</FormHelperText>
@@ -117,8 +117,11 @@ const ResetPassword = ({ setMode }: { setMode: (mode: string) => void }) => {
         <FormControl isInvalid={Boolean(errors.mail)}>
           <FormLabel>E-Mail</FormLabel>
           <Input
+            {...register('mail')}
+            type='email'
+            id='email'
             placeholder=''
-            {...register('mail')} // assign value to the react hook form
+            autoComplete='email'
           />
           {!errors.mail ? (
             <FormHelperText>Enter your email here</FormHelperText>

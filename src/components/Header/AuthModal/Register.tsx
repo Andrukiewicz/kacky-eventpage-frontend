@@ -32,11 +32,11 @@ const validationSchema = z
       }),
     pwd: z
       .string()
-      .min(6, { message: 'Password must be atleast 6 characters' })
+      .min(8, { message: 'Password must be atleast 8 characters' })
       .max(80, { message: 'Really? Sleeping on your Keyboard?' }),
     confirmPwd: z
       .string()
-      .min(1, { message: 'Confirm Password is required' })
+      .min(8, { message: 'Confirm Password is required' })
       .max(80, { message: 'Really? Sleeping on your Keyboard?' }),
     // terms: z.literal(true, {
     //   errorMap: () => ({ message: 'You must accept Terms and Conditions' }),
@@ -108,7 +108,7 @@ const Register = ({ setMode }: { setMode: (mode: string) => void }) => {
           <Input
             {...register('mail')}
             type='email'
-            id='mailadress'
+            id='email'
             placeholder='E-Mail'
             autoComplete='email'
           />

@@ -25,7 +25,7 @@ const Footer = () => (
       </Link>
       &nbsp;or&nbsp;
       <Link
-        href='https://ko-fi.com/corkscrew'
+        href='https://www.paypal.me/czosneg'
         isExternal
         textDecoration='underline'
       >

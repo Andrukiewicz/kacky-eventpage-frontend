@@ -52,9 +52,4 @@ const KrLogo2023: React.FC<KrLogoProps> = ({
   );
 };
 
-KrLogo2023.defaultProps = {
-  color: '#FFFFFF',
-  width: '400px',
-};
-
 export default KrLogo2023;

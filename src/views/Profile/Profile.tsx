@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -95,7 +95,16 @@ const Profile = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<ProfileDataFormSchema>();
+
+  useEffect(() => {
+    if (profileData) {
+      setValue('tmnf', profileData.tmnf);
+      setValue('tm20', profileData.tm20);
+      setValue('discord', profileData.discord);
+    }
+  }, [profileData, setValue]); // Dependency array for clarity
 
   const updateProfileMutation = useMutation({
     mutationKey: ['updateProfile', authentication.token],
@@ -157,7 +166,7 @@ const Profile = () => {
 
       const newData = { ...data, token: authentication.token };
       // Call the mutation to update the profile data
-      updateProfileMutation.mutateAsync(newData); // Call the mutation to reset password
+      updateProfileMutation.mutateAsync(newData);
     } catch (error) {
       // If api returns error, display an toast with error message
       toast({
@@ -214,7 +223,6 @@ const Profile = () => {
                   id='tmnf'
                   placeholder='Enter TMNF Login'
                   autoComplete='off' // or "tmnf"
-                  defaultValue={profileData?.tmnf}
                   {...register('tmnf')}
                 />
                 {!errors.tmnf ? (
@@ -233,7 +241,6 @@ const Profile = () => {
                   id='tm20'
                   placeholder='Enter TM2020 Login'
                   autoComplete='off' // or "tm20"
-                  defaultValue={profileData?.tm20}
                   {...register('tm20')}
                 />
                 {!errors.tm20 ? (
@@ -252,7 +259,6 @@ const Profile = () => {
                   id='discord'
                   placeholder='Enter Discord Login'
                   autoComplete='off' // or "discord"
-                  defaultValue={profileData?.discord}
                   {...register('discord')}
                 />
                 {!errors.discord ? (

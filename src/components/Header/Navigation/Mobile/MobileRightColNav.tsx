@@ -89,16 +89,16 @@ const MobileRightColNav = () => {
       </Center>
       {authentication.isLoggedIn ? (
         <Menu isLazy>
-          <MenuButton as={IconButton} variant='ghost'>
-            <Button
-              variant='ghost'
-              p={{ base: 0 }}
-              rounded={10}
-              h='full'
-              filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
-            >
-              <MdPerson size={iconSize} />
-            </Button>
+          <MenuButton
+            as={Button}
+            variant='ghost'
+            p={{ base: 2 }}
+            rounded={10}
+            h='full'
+            w='full'
+            filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
+          >
+            <MdPerson size={iconSize} />
           </MenuButton>
 
           <MenuList borderRadius={10}>

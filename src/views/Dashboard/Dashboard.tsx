@@ -137,7 +137,7 @@ const Dashboard = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <Center mb='5rem' w='full'>
+      <Center w='full'>
         <Flex
           maxW={{ base: 'container.sm', xl: 'container.xl' }}
           w={['full', 500, 500]}
@@ -145,7 +145,7 @@ const Dashboard = () => {
           align='center'
           direction='column'
           // w='full'
-          gap={4}
+          gap={2}
           rounded='1.5rem'
           overflow='hidden'
           bg={colorMode === 'dark' ? 'neutral.900' : 'neutral.100'}
@@ -153,7 +153,7 @@ const Dashboard = () => {
         >
           <Box
             py={3}
-            px={4}
+            px={{ base: 3, md: 4 }}
             bg={colorMode === 'dark' ? 'neutral.800' : 'neutral.200'}
             w='full'
             position='relative'
@@ -169,7 +169,7 @@ const Dashboard = () => {
           </Box>
           {isSuccess ? (
             <Box justifyContent='center' alignContent='center' w='full' gap={0}>
-              <HStack justify='space-between' px={4}>
+              <HStack justify='space-between' px={{ base: 3, md: 4 }}>
                 <Text
                   fontSize='sm'
                   fontWeight='light'
@@ -254,7 +254,7 @@ const Dashboard = () => {
           )}
         </Flex>
       </Center>
-      <Box>
+      {/* <Box>
         <Heading as='h2' textAlign='center'>
           All servers
         </Heading>
@@ -324,7 +324,7 @@ const Dashboard = () => {
             ))}
           </TabPanels>
         </Tabs>
-      </Box>
+      </Box> */}
     </motion.div>
   );
 };

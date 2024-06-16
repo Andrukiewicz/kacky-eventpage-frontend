@@ -156,7 +156,7 @@ const Leaderboard = () => {
   return (
     <Center mb={{ base: 24, md: 8 }} px={{ base: 4, md: 8 }} w='full'>
       <VStack overflow='hidden' spacing={4}>
-        <Heading>
+        <Heading my={1}>
           {event.type === 'kk' ? 'Kackiest Kacky' : 'Kacky Reloaded'}{' '}
           {event.edition} Leaderboard
         </Heading>

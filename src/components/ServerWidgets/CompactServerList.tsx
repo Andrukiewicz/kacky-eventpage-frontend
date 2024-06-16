@@ -8,6 +8,9 @@ import {
   VStack,
   Image,
   Button,
+  Badge,
+  useDisclosure,
+  Icon,
 } from '@chakra-ui/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -15,12 +18,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { getMapImageUrl } from '@/api/api';
 // import mapImageFallback from '@/assets/images/mapImageFallback.jpg';
 import EventContext from '@/context/EventContext';
+import { diffBadgeColorArr, getDefaultBackgrounds } from '@/utils/theme';
 import { IMAGES } from '@/utils/Images';
 import { NavLink } from 'react-router-dom';
+import MapImageModal from '../MapImageModal';
 
 // eslint-disable-next-line no-unused-vars
 const CompactServerList = ({
   serverNumber,
+  serverDifficulty,
   maps,
   timeLeft,
   serverJoin,
@@ -30,6 +36,13 @@ const CompactServerList = ({
   const { colorMode } = useColorMode();
 
   const { event } = useContext(EventContext);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalNextMap1 = useDisclosure();
+  const modalNextMap2 = useDisclosure();
+  const modalNextMap3 = useDisclosure();
+
+  const nextMapModals = [modalNextMap1, modalNextMap2, modalNextMap3];
 
   const divRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
@@ -189,28 +202,7 @@ const CompactServerList = ({
       </AnimatePresence>
 
       {/* SERVER */}
-      <Center w='full' h='full' py={3} px={4} position='relative'>
-        <Button
-          as={NavLink}
-          to={`${serverJoin}`}
-          position='absolute'
-          w='full'
-          h='full'
-          opacity='0'
-          _hover={{ opacity: '80%' }}
-          zIndex={100}
-          fontWeight='bold'
-          bg={
-            colorMode === 'dark'
-              ? 'neutral.800 !important'
-              : 'neutral.200 !important'
-          }
-          textAlign='center'
-          alignItems={'center'}
-          justifyContent={'center'}
-        >
-          Connect to server #{serverNumber}
-        </Button>
+      <Center w='full' h='full' py={2} px={{ base: 3, md: 4 }}>
         <Flex
           direction='row'
           align='center'
@@ -222,6 +214,10 @@ const CompactServerList = ({
             <Box position='relative' h={12} w={12}>
               <Image
                 src={getMapImageUrl(event.type, maps[0].number)}
+                onClick={onOpen}
+                cursor='pointer'
+                _hover={{ transform: 'scale(1.05)' }}
+                transition='transform 0.1s ease-in-out'
                 // fallback={IMAGES.mapImageFallback}
                 h={12}
                 w={12}
@@ -312,7 +308,23 @@ const CompactServerList = ({
               lineHeight={1}
               textTransform='initial'
             >
-              <Text fontWeight='medium'>Server {serverNumber}</Text>
+              <Flex
+                gap={{ base: 1, md: 2 }}
+                flexDir={{ base: 'column', md: 'row' }}
+              >
+                <Text fontWeight='medium'>Server {serverNumber}</Text>
+                {serverDifficulty !== '' ? ( // Servers do not have a difficulty in Phase 1
+                  <Badge
+                    fontSize={'sm'}
+                    visibility={
+                      serverDifficulty === 'undefined' ? 'hidden' : 'visible'
+                    }
+                    variant={diffBadgeColorArr[serverDifficulty].variant}
+                  >
+                    {serverDifficulty}
+                  </Badge>
+                ) : null}
+              </Flex>
               <AnimatePresence mode='wait'>
                 {timeLeft < 3 ? (
                   <motion.div
@@ -381,7 +393,12 @@ const CompactServerList = ({
               </AnimatePresence>
             </VStack>
           </HStack>
-          <HStack w='40%' justify='space-between' textTransform='initial'>
+          <HStack
+            w='fit-content'
+            gap={4}
+            justify='space-between'
+            textTransform='initial'
+          >
             <HStack
               justify='center'
               alignContent='start'
@@ -400,7 +417,7 @@ const CompactServerList = ({
                   }}
                   transition={{ ease: 'easeInOut', duration: 0.3 }}
                 >
-                  <Text as='span' textColor='red'>
+                  <Text as='span' textColor='red' fontSize={'xs'}>
                     Restarting ...
                   </Text>
                 </motion.div>
@@ -427,6 +444,50 @@ const CompactServerList = ({
                 </motion.div>
               )}
             </HStack>
+
+            <VStack display={{ base: 'none', md: 'flex' }}>
+              <AnimatePresence mode='wait'>
+                <motion.div
+                  key={'mapjoinloading'}
+                  initial={{ opacity: 0 }} // Start with 0 opacity
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
+                  transition={{ ease: 'easeInOut', duration: 0.3 }}
+                >
+                  <Flex
+                    gap={0}
+                    textColor={colorMode === 'dark' ? 'white' : 'black'}
+                  >
+                    <Button
+                      as={NavLink}
+                      to={`${serverJoin}`}
+                      position='relative'
+                      w='fit'
+                      fontSize={'xs'}
+                      h='2rem'
+                      p={1}
+                      _hover={{ bg: 'neutral.700 !important' }}
+                      zIndex={100}
+                      fontWeight='bold'
+                      bg={
+                        colorMode === 'dark'
+                          ? 'neutral.800 !important'
+                          : 'neutral.200 !important'
+                      }
+                      textAlign='center'
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                    >
+                      Join
+                    </Button>
+                  </Flex>
+                </motion.div>
+              </AnimatePresence>
+            </VStack>
             <VStack>
               <AnimatePresence mode='wait'>
                 <motion.div
@@ -443,29 +504,36 @@ const CompactServerList = ({
                   <VStack
                     gap={0}
                     textColor={colorMode === 'dark' ? 'white' : 'black'}
+                    justify={'end'}
                   >
-                    <Text
-                      color={
-                        maps[1].finished
-                          ? colorMode === 'dark'
-                            ? 'green.300'
-                            : 'green.500'
-                          : ''
-                      }
-                    >
-                      {maps[1].number}
-                    </Text>
-                    <Text
-                      color={
-                        maps[2].finished
-                          ? colorMode === 'dark'
-                            ? 'green.300'
-                            : 'green.500'
-                          : ''
-                      }
-                    >
-                      {maps[2].number}
-                    </Text>
+                    {maps.slice(1).map((map: ServerMap, index: number) => (
+                      <>
+                        <Text
+                          onClick={nextMapModals[index].onOpen}
+                          cursor='pointer'
+                          _hover={{ transform: 'scale(1.1)' }}
+                          transition='transform 0.1s ease-in-out'
+                          key={map.number}
+                          color={
+                            map.finished
+                              ? colorMode === 'dark'
+                                ? 'green.300'
+                                : 'green.500'
+                              : ''
+                          }
+                        >
+                          {map.number}
+                        </Text>
+                        <MapImageModal
+                          mapNumber={map.number}
+                          author={map.author}
+                          isFinished={map.finished}
+                          isOpen={nextMapModals[index].isOpen}
+                          onClose={nextMapModals[index].onClose}
+                          eventtype={event.type}
+                        />
+                      </>
+                    ))}
                   </VStack>
                 </motion.div>
               </AnimatePresence>
@@ -473,6 +541,14 @@ const CompactServerList = ({
           </HStack>
         </Flex>
       </Center>
+      <MapImageModal
+        mapNumber={maps[0].number}
+        author={maps[0].author}
+        isFinished={maps[0].finished}
+        isOpen={isOpen}
+        onClose={onClose}
+        eventtype={event.type}
+      />
     </Box>
   );
 };

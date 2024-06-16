@@ -15,7 +15,7 @@ const WRHolders = () => {
   return (
     <Center px={{ base: 4, md: 8 }} mb={{ base: 24, md: 8 }} w='full'>
       <VStack overflow='hidden' spacing={4}>
-        <Heading>List of WR Holders</Heading>
+        <Heading my={1}>List of WR Holders</Heading>
         <Center mb={{ base: 0, md: 4 }}>
           <Button
             borderRadius='6px 0 0 6px'

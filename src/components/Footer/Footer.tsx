@@ -8,7 +8,7 @@ const Footer = () => (
     transition={{ duration: 0.5, delay: 1 }}
   >
     <Box
-      my={{ base: '65px', md: 5 }}
+      mb={{ base: '64px', md: 5 }}
       textTransform='none'
       textAlign='center'
       fontSize={{ base: 'md', md: 'lg' }}

@@ -21,7 +21,7 @@ const MainLayout = () => {
       <VStack w='full' minH='100vh' justify='space-between'>
         <Box
           as='main'
-          mt={{ base: '16px', md: '100px' }}
+          mt={{ base: '0', md: '100px' }}
           py={{ base: '2rem', md: '3rem' }}
           px={{ base: 4, md: 8 }}
           w='full'

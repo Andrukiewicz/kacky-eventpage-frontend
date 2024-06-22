@@ -5,6 +5,7 @@ import {
   HStack,
   Link,
   Menu,
+  Text,
   useBreakpointValue,
   useColorMode,
   useColorModeValue,
@@ -82,25 +83,30 @@ const UserNavigation = () => {
   return (
     <HStack h='50px'>
       <Menu autoSelect={false}>
-        <HStack spacing={0} h='full'>
+        <HStack spacing={2} h='full'>
           <Button
             aria-label='Change color mode'
             variant='ghost'
-            p={{ base: 0, lg: 2 }}
-            roundedBottom={1}
+            p={{ base: 0, md: 1 }}
+            rounded='10'
             h='full'
+            display='flex'
+            flexDirection='column'
             onClick={toggleColorMode}
             backgroundColor={'transparent'}
             filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
           >
             <SwitchIcon size={iconSize} />
+            <Text fontSize={'xs'}>Theme</Text>
           </Button>
           <Button
             as={Link}
             variant='ghost'
-            p={{ base: 0, lg: 2 }}
-            roundedBottom={1}
+            p={{ base: 0, md: 1 }}
+            rounded='10'
             h='full'
+            display='flex'
+            flexDirection='column'
             aria-label='Discord link'
             href={discordUrl}
             isExternal
@@ -110,12 +116,13 @@ const UserNavigation = () => {
               size={iconSize}
               color={colorMode === 'dark' ? 'white' : 'black'}
             />
+            <Text fontSize={'xs'}>Discord</Text>
           </Button>
         </HStack>
         <Center height='50px'>
           <Divider orientation='vertical' />
         </Center>
-        <HStack spacing={0} h='full'>
+        <HStack spacing={2} h='full'>
           {authentication.isLoggedIn ? (
             <>
               <Button
@@ -123,23 +130,29 @@ const UserNavigation = () => {
                 to='/profile'
                 aria-label='View profile'
                 variant='ghost'
-                p={{ base: 0, lg: 2 }}
-                roundedBottom={1}
+                p={{ base: 0, md: 1 }}
+                rounded='10'
                 h='full'
+                display='flex'
+                flexDirection='column'
                 filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
               >
                 <MdPersonOutline size={iconSize} />
+                <Text fontSize={'xs'}>Profile</Text>
               </Button>
               <Button
                 aria-label='Log out'
                 variant='ghost'
-                p={{ base: 0, lg: 2 }}
-                roundedBottom={1}
+                p={{ base: 0, md: 1 }}
+                rounded='10'
                 h='full'
+                display='flex'
+                flexDirection='column'
                 onClick={logout}
                 filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
               >
                 <MdOutlineLogout size={iconSize} />
+                <Text fontSize={'xs'}>Log out</Text>
               </Button>
             </>
           ) : (
@@ -147,14 +160,17 @@ const UserNavigation = () => {
               <Button
                 aria-label='Log in'
                 variant='ghost'
-                p={{ base: 0, lg: 2 }}
+                p={{ base: 0, md: 1 }}
+                rounded='10'
                 onClick={onOpen}
-                roundedBottom={1}
                 h='full'
+                display='flex'
+                flexDirection='column'
                 backgroundColor={'transparent'}
                 filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
               >
                 <MdOutlineLogin size={iconSize} />
+                <Text fontSize={'xs'}>Log in</Text>
               </Button>
             </>
           )}

@@ -158,7 +158,7 @@ const MapDetailCell = memo<MapDetailCellProps>(
                 align='center'
                 w='full'
                 h='fit'
-                gap={{ base: 3, md: 4 }}
+                gap={{ base: 3, md: 6 }}
               >
                 <MapDifficultyCell
                   difficulty={data.difficulty}
@@ -194,28 +194,59 @@ const MapDetailCell = memo<MapDetailCellProps>(
               </VStack>
             </HStack>
           ) : mode === 'minimal' ? null : (
-            <Flex
-              marginLeft='20'
-              direction='column'
+            <HStack
+              px={2}
               justifyContent='space-around'
+              align='center'
+              textShadow='glow'
+              letterSpacing='0.2em'
+              fontSize='lg'
+              fontWeight='400'
+              h='fit-content'
             >
-              <Flex alignContent='center' height='40px' align='center'>
+              <VStack
+                align='start'
+                justifyContent='space-around'
+                w='full'
+                h='full'
+                gap={{ base: 3, md: 6 }}
+              >
                 <Tooltip
                   label={`Rated Difficulty: ${data.rating}`}
-                  placement='start'
+                  placement='top'
                 >
                   <Text>Difficulty:</Text>
                 </Tooltip>
+                <Text>Your clip:</Text>
+                <Text display={mode === 'hunting' ? 'none' : 'inherit'}>
+                  Discord Alarm:
+                </Text>
+              </VStack>
+              <VStack
+                align='start'
+                justifyContent='space-around'
+                w='full'
+                h='full'
+                gap={{ base: 3, md: 6 }}
+              >
                 <MapDifficultyCell
                   difficulty={data.difficulty}
                   mapId={data.number}
                   eventtype={eventtype}
-                  // edition={edition} // not used?
+                  // edition={edition}
                   table={table}
                   rowIndex={rowIndex}
                 />
-              </Flex>
-            </Flex>
+                <Text>Log in</Text>
+                <Flex
+                  alignContent='center'
+                  align='center'
+                  display={mode === 'hunting' ? 'none' : 'inherit'}
+                >
+                  <Text>Log in</Text>
+                </Flex>
+              </VStack>
+            </HStack>
           )}
         </HStack>
       </Flex>

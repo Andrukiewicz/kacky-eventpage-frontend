@@ -11,10 +11,12 @@ import {
   Badge,
   useDisclosure,
   Icon,
+  CircularProgressLabel,
+  useTheme,
 } from '@chakra-ui/react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-
+import { DateTime } from 'luxon';
 import { getMapImageUrl } from '@/api/api';
 // import mapImageFallback from '@/assets/images/mapImageFallback.jpg';
 import EventContext from '@/context/EventContext';
@@ -30,8 +32,8 @@ const CompactServerList = ({
   maps,
   timeLeft,
   serverJoin,
-  isLoading,
   isSuccess,
+  isLoading,
 }: Server) => {
   const { colorMode } = useColorMode();
 
@@ -41,8 +43,11 @@ const CompactServerList = ({
   const modalNextMap1 = useDisclosure();
   const modalNextMap2 = useDisclosure();
   const modalNextMap3 = useDisclosure();
+  const theme = useTheme();
 
   const nextMapModals = [modalNextMap1, modalNextMap2, modalNextMap3];
+
+  const imageUrl = getMapImageUrl(event.type, maps[0].number);
 
   const divRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
@@ -71,9 +76,10 @@ const CompactServerList = ({
       ref={divRef}
     >
       <AnimatePresence>
-        {timeLeft < 3 && (
+        {timeLeft <= 0 && (
           <motion.div
             key={serverNumber + 'loader'}
+            style={{ position: 'absolute', zIndex: 5 }}
             initial={{
               opacity: 0,
             }}
@@ -93,6 +99,7 @@ const CompactServerList = ({
             <Box
               bg={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
               position='absolute'
+              zIndex={5}
               opacity={0.1}
               h={dimensions.height + 'px'}
               w={dimensions.width}
@@ -101,9 +108,9 @@ const CompactServerList = ({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {timeLeft < 3 && (
+        {timeLeft <= 0 && (
           <motion.svg
-            style={{ position: 'absolute' }}
+            style={{ position: 'absolute', zIndex: 5 }}
             width={dimensions.width + 'px'}
             height={dimensions.height + 'px'}
             viewBox={`0 0 ${dimensions.width + 0} ${dimensions.height}`}
@@ -179,7 +186,12 @@ const CompactServerList = ({
               </filter>
             </defs>
 
-            <svg className='neon' style={{ filter: 'url(#neon)' }} x={0} y={0}>
+            <svg
+              className='neon'
+              style={{ filter: 'url(#neon)', zIndex: 5 }}
+              x={0}
+              y={0}
+            >
               <motion.path
                 d={`M 0 0 h ${dimensions.width} v ${dimensions.height} h -${dimensions.width} v -${dimensions.height}`}
                 stroke='LightSteelBlue'
@@ -202,133 +214,193 @@ const CompactServerList = ({
       </AnimatePresence>
 
       {/* SERVER */}
-      <Center w='full' h='full' py={2} px={{ base: 3, md: 4 }}>
+      <Center w='full' h='full'>
         <Flex
           direction='row'
           align='center'
           justify='space-between'
           position='relative'
-          w='full'
+          w='full' // Image fallback doesn't work for some reason with bgImage
+          bgImage={`url(${imageUrl})`}
+          bgColor={`${colorMode === 'dark' ? 'black' : 'white'}`}
+          bgPosition='center'
+          bgRepeat='no-repeat'
+          bgSize='cover'
+          transition='transform 0.1s ease-in-out'
+          p={0}
+          // filter={timeLeft < 3 ? 'grayscale(100%)' : 'grayscale(0%)'}
         >
-          <HStack>
-            <Box position='relative' h={12} w={12}>
-              <Image
-                src={getMapImageUrl(event.type, maps[0].number)}
-                onClick={onOpen}
-                cursor='pointer'
-                _hover={{ transform: 'scale(1.05)' }}
-                transition='transform 0.1s ease-in-out'
-                // fallback={IMAGES.mapImageFallback}
-                h={12}
-                w={12}
-                objectFit='cover'
-                position='absolute'
-                rounded='full'
-                filter={timeLeft < 3 ? 'grayscale(100%)' : 'grayscale(0%)'}
-              />
-              <Box position='absolute' bottom={0} right={0}>
-                <Box
-                  position='absolute'
+          <Flex
+            direction='row'
+            align='center'
+            justify='space-between'
+            position='relative'
+            w='full'
+            px={{ base: 3, md: 4 }}
+            bgColor={`${
+              colorMode === 'dark'
+                ? getDefaultBackgrounds().dark[0]
+                : getDefaultBackgrounds().light[0]
+            }99`}
+          >
+            {/* <Image
+            src={getMapImageUrl(event.type, maps[0].number)}
+            onClick={onOpen}
+            cursor='pointer'
+            _hover={{ transform: 'scale(1.05)' }}
+            transition='transform 0.1s ease-in-out'
+            // fallback={IMAGES.mapImageFallback}
+            h='full'
+            w='full'
+            objectFit='cover'
+            position='absolute'
+            rounded='1rem'
+            filter={timeLeft < 3 ? 'grayscale(100%)' : 'grayscale(0%)'}
+          /> */}
+            {serverDifficulty !== '' ? ( // Servers do not have a difficulty in Phase 1
+              <Badge
+                w={'1rem'}
+                h={'100%'}
+                left={0}
+                position={'absolute'}
+                visibility={
+                  serverDifficulty === 'undefined' ? 'hidden' : 'visible'
+                }
+                variant={diffBadgeColorArr[serverDifficulty].variant}
+              ></Badge>
+            ) : null}
+            <HStack gap={4} pl={2}>
+              <Box position='relative' alignContent={'center'} w={'2rem'}>
+                <Text
+                  fontWeight='medium'
+                  fontSize={'2xl'}
                   rounded='full'
-                  bottom={0}
-                  right={0}
-                  h={4}
-                  w={4}
-                  outline='3px solid'
-                  outlineColor={
-                    colorMode === 'dark'
-                      ? 'neutral.800 !important'
-                      : 'neutral.200 !important'
-                  }
-                  bg={
-                    colorMode === 'dark'
-                      ? 'neutral.800 !important'
-                      : 'neutral.200 !important'
-                  }
+                  filter={timeLeft < 1 ? 'grayscale(100%)' : 'grayscale(0%)'}
+                  transition='transform 1s ease-in-out'
+                  textAlign={'center'}
                 >
-                  <AnimatePresence mode='wait'>
-                    {timeLeft < 3 ? (
-                      <Box
-                        as={motion.div}
-                        key={serverNumber + 'statusloading'}
-                        initial={{ opacity: 0 }} // Start slightly enlarged
-                        animate={{
-                          opacity: 1,
-                          transition: {
-                            ease: 'backInOut',
-                            duration: 0.3,
-                          },
-                        }}
-                        exit={{
-                          opacity: 0,
-                          transition: {
-                            ease: 'easeOut',
-                            duration: 0.3,
-                          },
-                        }}
-                        rounded='full'
-                        bg='red.600'
-                        position='absolute'
-                        h={4}
-                        w={4}
-                      />
-                    ) : (
-                      <>
-                        {isSuccess && (
-                          <Box
-                            as={motion.div}
-                            key={serverNumber + 'statusready'}
-                            initial={{
-                              opacity: 0,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              transition: { ease: 'backInOut', duration: 0.3 },
-                            }}
-                            exit={{
-                              opacity: 0,
-                              transition: { ease: 'easeOut', duration: 0.3 },
-                            }}
-                            rounded='full'
-                            bg='green.600'
-                            position='absolute'
-                            h={4}
-                            w={4}
-                          />
-                        )}
-                      </>
-                    )}
-                  </AnimatePresence>
-                </Box>
+                  #{serverNumber}
+                </Text>
               </Box>
-            </Box>
-            <VStack
-              gap='1'
-              align='start'
-              lineHeight={1}
+              <VStack
+                gap='1'
+                align='start'
+                lineHeight={0.75}
+                textTransform='initial'
+              >
+                <AnimatePresence mode='wait'>
+                  {timeLeft <= 0 ? (
+                    <motion.div
+                      key={'mapnumberloadingserver'}
+                      initial={{ opacity: 0 }} // Start with 0 opacity
+                      animate={{
+                        opacity: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                      }}
+                      transition={{ ease: 'easeInOut', duration: 0.3 }}
+                    >
+                      <Text
+                        as='span'
+                        fontWeight='bold'
+                        color={colorMode === 'dark' ? 'blue.500' : 'blue.500'}
+                        filter={
+                          colorMode === 'dark'
+                            ? theme.shadows.dropGlowDark
+                            : theme.shadows.dropGlow
+                        }
+                      >
+                        Loading {maps[1].number} ...
+                      </Text>
+                    </motion.div>
+                  ) : (
+                    <>
+                      {isSuccess && (
+                        <motion.div
+                          key={'mapnumberready'}
+                          initial={{ opacity: 0 }} // Start with 0 opacity
+                          animate={{
+                            opacity: 1,
+                          }}
+                          exit={{
+                            opacity: 0,
+                          }}
+                          transition={{ ease: 'easeInOut', duration: 0.3 }}
+                        >
+                          <HStack
+                            // fontWeight='thin'
+                            gap={2}
+                            color={
+                              colorMode === 'dark'
+                                ? 'neutral.100'
+                                : 'neutral.900'
+                            }
+                            align='end'
+                            fontSize={'2xl'}
+                            onClick={onOpen}
+                            cursor='pointer'
+                            _hover={{ transform: 'scale(1.05)' }}
+                            transition='transform 0.1s ease-in-out'
+                          >
+                            {/* <Text as='span'>Map</Text> */}
+                            <Text
+                              as='span'
+                              fontWeight='bold'
+                              color={
+                                maps[0].finished
+                                  ? colorMode === 'dark'
+                                    ? 'green.300'
+                                    : 'green.500'
+                                  : ''
+                              }
+                              filter={
+                                maps[0].finished
+                                  ? colorMode === 'dark'
+                                    ? theme.shadows.finGlowDark
+                                    : theme.shadows.finGlowLight
+                                  : colorMode === 'dark'
+                                    ? theme.shadows.dropGlowDark
+                                    : theme.shadows.dropGlow
+                              }
+                            >
+                              {maps[0].number}
+                            </Text>
+                            <Text
+                              fontSize='sm'
+                              display={{ base: 'none', sm: 'block' }}
+                              filter={
+                                colorMode === 'dark'
+                                  ? theme.shadows.dropGlowDark
+                                  : theme.shadows.dropGlow
+                              }
+                            >
+                              {' '}
+                              by {maps[0].author}{' '}
+                            </Text>
+                          </HStack>
+                        </motion.div>
+                      )}
+                    </>
+                  )}
+                </AnimatePresence>
+              </VStack>
+            </HStack>
+            <HStack
+              w='fit-content'
+              gap={4}
+              justify='space-between'
               textTransform='initial'
             >
-              <Flex
-                gap={{ base: 1, md: 2 }}
-                flexDir={{ base: 'column', md: 'row' }}
+              <HStack
+                justify='center'
+                alignContent='start'
+                textAlign='start'
+                flexGrow={1}
               >
-                <Text fontWeight='medium'>Server {serverNumber}</Text>
-                {serverDifficulty !== '' ? ( // Servers do not have a difficulty in Phase 1
-                  <Badge
-                    fontSize={'sm'}
-                    visibility={
-                      serverDifficulty === 'undefined' ? 'hidden' : 'visible'
-                    }
-                    variant={diffBadgeColorArr[serverDifficulty].variant}
-                  >
-                    {serverDifficulty}
-                  </Badge>
-                ) : null}
-              </Flex>
-              <AnimatePresence mode='wait'>
-                {timeLeft < 3 ? (
+                {timeLeft <= 0 ? (
                   <motion.div
-                    key={'mapnumberloadingserver'}
+                    key={'timerrestarting'}
                     initial={{ opacity: 0 }} // Start with 0 opacity
                     animate={{
                       opacity: 1,
@@ -338,207 +410,173 @@ const CompactServerList = ({
                     }}
                     transition={{ ease: 'easeInOut', duration: 0.3 }}
                   >
-                    <Text as='span' fontWeight='thin' color='blue.500'>
-                      Loading map {maps[1].number} ...
+                    <Text
+                      as='span'
+                      textColor='red'
+                      fontWeight={'bold'}
+                      sx={{ fontVariantNumeric: 'tabular-nums' }}
+                    >
+                      00:00
                     </Text>
                   </motion.div>
                 ) : (
-                  <>
-                    {isSuccess && (
-                      <motion.div
-                        key={'mapnumberready'}
-                        initial={{ opacity: 0 }} // Start with 0 opacity
-                        animate={{
-                          opacity: 1,
-                        }}
-                        exit={{
-                          opacity: 0,
-                        }}
-                        transition={{ ease: 'easeInOut', duration: 0.3 }}
+                  <motion.div
+                    key={'timerrunning'}
+                    initial={{ opacity: 0 }} // Start with 0 opacity
+                    animate={{
+                      opacity: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                    }}
+                    transition={{ ease: 'easeInOut', duration: 0.3 }}
+                  >
+                    <Flex justify='center' align='center' h='2rem' w='3rem'>
+                      <Text
+                        alignContent={'center'}
+                        as='span'
+                        fontWeight={'bold'}
+                        textColor={
+                          timeLeft < 300
+                            ? colorMode === 'dark'
+                              ? 'orange.500'
+                              : 'orange.500'
+                            : ''
+                        }
+                        sx={{ fontVariantNumeric: 'tabular-nums' }}
+                        filter={
+                          colorMode === 'dark'
+                            ? theme.shadows.dropGlowDark
+                            : theme.shadows.dropGlow
+                        }
                       >
-                        <HStack
-                          fontWeight='thin'
-                          gap={2}
-                          color={
-                            colorMode === 'dark' ? 'neutral.400' : 'neutral.700'
-                          }
-                          align='end'
-                        >
-                          <Text as='span'>Map</Text>
+                        {/* {timeLeft > 60
+                        ? Math.floor(timeLeft / 60)
+                            .toString()
+                            .padStart(1, '0')
+                        : '1'}
+                      m left */}
+                        {DateTime.fromSeconds(timeLeft).toFormat('mm:ss')}
+                      </Text>
+                    </Flex>
+                  </motion.div>
+                )}
+              </HStack>
+
+              <VStack display={{ base: 'none', md: 'flex' }}>
+                <AnimatePresence mode='wait'>
+                  <motion.div
+                    key={'mapjoinloading'}
+                    initial={{ opacity: 0 }} // Start with 0 opacity
+                    animate={{
+                      opacity: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                    }}
+                    transition={{ ease: 'easeInOut', duration: 0.3 }}
+                  >
+                    <Flex
+                      gap={0}
+                      textColor={colorMode === 'dark' ? 'white' : 'black'}
+                    >
+                      <Button
+                        as={NavLink}
+                        to={`${serverJoin}`}
+                        position='relative'
+                        w='fit'
+                        fontSize={'xs'}
+                        h='2rem'
+                        p={1}
+                        _hover={{
+                          bg:
+                            colorMode === 'dark'
+                              ? 'neutral.700 !important'
+                              : 'neutral.300 !important',
+                        }}
+                        fontWeight='bold'
+                        bg={
+                          colorMode === 'dark'
+                            ? 'neutral.800 !important'
+                            : 'neutral.200 !important'
+                        }
+                        textAlign='center'
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        filter={
+                          colorMode === 'dark'
+                            ? theme.shadows.dropGlowDark
+                            : theme.shadows.dropGlow
+                        }
+                      >
+                        Join
+                      </Button>
+                    </Flex>
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
+              <VStack>
+                <AnimatePresence mode='wait'>
+                  <motion.div
+                    key={'mapnumberloadingnext'}
+                    initial={{ opacity: 0 }} // Start with 0 opacity
+                    animate={{
+                      opacity: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                    }}
+                    transition={{ ease: 'easeInOut', duration: 0.3 }}
+                  >
+                    <VStack
+                      gap={0}
+                      textColor={colorMode === 'dark' ? 'white' : 'black'}
+                      justify={'end'}
+                      minW={'2rem'}
+                    >
+                      {maps.slice(1).map((map: ServerMap, index: number) => (
+                        <Fragment key={map.number}>
                           <Text
-                            as='span'
-                            fontWeight='bold'
+                            onClick={nextMapModals[index].onOpen}
+                            cursor='pointer'
+                            _hover={{ transform: 'scale(1.1)' }}
+                            fontWeight={'bold'}
+                            transition='transform 0.1s ease-in-out'
                             color={
-                              maps[0].finished
+                              map.finished
                                 ? colorMode === 'dark'
                                   ? 'green.300'
                                   : 'green.500'
                                 : ''
                             }
+                            filter={
+                              map.finished
+                                ? colorMode === 'dark'
+                                  ? theme.shadows.finGlowDark
+                                  : theme.shadows.finGlowLight
+                                : colorMode === 'dark'
+                                  ? theme.shadows.dropGlowDark
+                                  : theme.shadows.dropGlow
+                            }
                           >
-                            {maps[0].number}
+                            {map.number}
                           </Text>
-                          <Text
-                            fontSize='xs'
-                            display={{ base: 'none', sm: 'block' }}
-                          >
-                            {' '}
-                            by {maps[0].author}{' '}
-                          </Text>
-                        </HStack>
-                      </motion.div>
-                    )}
-                  </>
-                )}
-              </AnimatePresence>
-            </VStack>
-          </HStack>
-          <HStack
-            w='fit-content'
-            gap={4}
-            justify='space-between'
-            textTransform='initial'
-          >
-            <HStack
-              justify='center'
-              alignContent='start'
-              textAlign='start'
-              flexGrow={1}
-            >
-              {timeLeft < 3 ? (
-                <motion.div
-                  key={'timerrestarting'}
-                  initial={{ opacity: 0 }} // Start with 0 opacity
-                  animate={{
-                    opacity: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
-                  transition={{ ease: 'easeInOut', duration: 0.3 }}
-                >
-                  <Text as='span' textColor='red' fontSize={'xs'}>
-                    Restarting ...
-                  </Text>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={'timerrunning'}
-                  initial={{ opacity: 0 }} // Start with 0 opacity
-                  animate={{
-                    opacity: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
-                  transition={{ ease: 'easeInOut', duration: 0.3 }}
-                >
-                  <Text as='span' textColor={timeLeft < 300 ? 'orange' : ''}>
-                    {timeLeft > 60
-                      ? Math.floor(timeLeft / 60)
-                          .toString()
-                          .padStart(1, '0')
-                      : '1'}
-                    m left
-                  </Text>
-                </motion.div>
-              )}
+                          <MapImageModal
+                            mapNumber={map.number}
+                            author={map.author}
+                            isFinished={map.finished}
+                            isOpen={nextMapModals[index].isOpen}
+                            onClose={nextMapModals[index].onClose}
+                            eventtype={event.type}
+                          />
+                        </Fragment>
+                      ))}
+                    </VStack>
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
             </HStack>
-
-            <VStack display={{ base: 'none', md: 'flex' }}>
-              <AnimatePresence mode='wait'>
-                <motion.div
-                  key={'mapjoinloading'}
-                  initial={{ opacity: 0 }} // Start with 0 opacity
-                  animate={{
-                    opacity: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
-                  transition={{ ease: 'easeInOut', duration: 0.3 }}
-                >
-                  <Flex
-                    gap={0}
-                    textColor={colorMode === 'dark' ? 'white' : 'black'}
-                  >
-                    <Button
-                      as={NavLink}
-                      to={`${serverJoin}`}
-                      position='relative'
-                      w='fit'
-                      fontSize={'xs'}
-                      h='2rem'
-                      p={1}
-                      _hover={{ bg: 'neutral.700 !important' }}
-                      zIndex={100}
-                      fontWeight='bold'
-                      bg={
-                        colorMode === 'dark'
-                          ? 'neutral.800 !important'
-                          : 'neutral.200 !important'
-                      }
-                      textAlign='center'
-                      alignItems={'center'}
-                      justifyContent={'center'}
-                    >
-                      Join
-                    </Button>
-                  </Flex>
-                </motion.div>
-              </AnimatePresence>
-            </VStack>
-            <VStack>
-              <AnimatePresence mode='wait'>
-                <motion.div
-                  key={'mapnumberloadingnext'}
-                  initial={{ opacity: 0 }} // Start with 0 opacity
-                  animate={{
-                    opacity: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
-                  transition={{ ease: 'easeInOut', duration: 0.3 }}
-                >
-                  <VStack
-                    gap={0}
-                    textColor={colorMode === 'dark' ? 'white' : 'black'}
-                    justify={'end'}
-                  >
-                    {maps.slice(1).map((map: ServerMap, index: number) => (
-                      <>
-                        <Text
-                          onClick={nextMapModals[index].onOpen}
-                          cursor='pointer'
-                          _hover={{ transform: 'scale(1.1)' }}
-                          transition='transform 0.1s ease-in-out'
-                          key={map.number}
-                          color={
-                            map.finished
-                              ? colorMode === 'dark'
-                                ? 'green.300'
-                                : 'green.500'
-                              : ''
-                          }
-                        >
-                          {map.number}
-                        </Text>
-                        <MapImageModal
-                          mapNumber={map.number}
-                          author={map.author}
-                          isFinished={map.finished}
-                          isOpen={nextMapModals[index].isOpen}
-                          onClose={nextMapModals[index].onClose}
-                          eventtype={event.type}
-                        />
-                      </>
-                    ))}
-                  </VStack>
-                </motion.div>
-              </AnimatePresence>
-            </VStack>
-          </HStack>
+          </Flex>
         </Flex>
       </Center>
       <MapImageModal

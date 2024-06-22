@@ -25,7 +25,6 @@ import { getDashboardData } from '@/api/api';
 
 import AuthContext from '@/context/AuthContext';
 import { getDefaultBackgrounds } from '@/utils/theme';
-import KrLogo2023 from '@/assets/logos/krLogo2023';
 import { IMAGES } from '@/utils/Images';
 import CompactServerList from '@/components/ServerWidgets/CompactServerList';
 
@@ -145,7 +144,6 @@ const Dashboard = () => {
           align='center'
           direction='column'
           // w='full'
-          gap={2}
           rounded='1.5rem'
           overflow='hidden'
           bg={colorMode === 'dark' ? 'neutral.900' : 'neutral.100'}
@@ -167,93 +165,72 @@ const Dashboard = () => {
               </HStack>
             </Flex>
           </Box>
-          {isSuccess ? (
-            <Box justifyContent='center' alignContent='center' w='full' gap={0}>
-              <HStack justify='space-between' px={{ base: 3, md: 4 }}>
-                <Text
-                  fontSize='sm'
-                  fontWeight='light'
-                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                >
-                  Active now
-                </Text>
-                <Text
-                  fontSize='sm'
-                  fontWeight='light'
-                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                >
-                  Next maps
-                </Text>
-              </HStack>
-              {servers.map((server, idx) => (
-                <Fragment key={server.serverNumber}>
-                  <CompactServerList
-                    {...server}
-                    timeLeft={counter[idx] - mapChangeEstimate}
-                    isLoading={isLoading}
-                    isSuccess={isSuccess}
-                  />
-
-                  <Divider _last={{ display: 'none' }} />
-                </Fragment>
-              ))}
-            </Box>
-          ) : (
-            <Box
-              as={motion.div}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              justifyContent='center'
-              alignContent='center'
-              w='full'
-              gap={0}
-            >
-              <HStack justify='space-between' px={4}>
-                <Text
-                  fontSize='sm'
-                  fontWeight='light'
-                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                >
-                  Active now
-                </Text>
-                <Text
-                  fontSize='sm'
-                  fontWeight='light'
-                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-                >
-                  Next maps
-                </Text>
-              </HStack>
-              {[...Array(3)].map((_, idx) => (
-                <Box
-                  key={idx}
-                  width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
-                >
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+          <Box justifyContent='center' alignContent='center' w='full' gap={0}>
+            <HStack justify='space-between' px={{ base: 3, md: 4 }} py={2}>
+              <Text
+                fontSize='sm'
+                fontWeight='light'
+                color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+              >
+                Active now
+              </Text>
+              <Text
+                fontSize='sm'
+                fontWeight='light'
+                color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+              >
+                Next maps
+              </Text>
+            </HStack>
+            {isLoading ? (
+              <>
+                {[...Array(5)].map((_, idx) => (
+                  <Box
+                    key={idx}
+                    width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
                   >
-                    <Skeleton
-                      height='100px'
-                      startColor={`${
-                        colorMode === 'dark'
-                          ? getDefaultBackgrounds().dark[0]
-                          : getDefaultBackgrounds().light[0]
-                      }75`}
-                      endColor={`${
-                        colorMode === 'dark'
-                          ? getDefaultBackgrounds().dark[1]
-                          : getDefaultBackgrounds().light[1]
-                      }75`}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    >
+                      <Skeleton
+                        height='85px'
+                        startColor={`${
+                          colorMode === 'dark'
+                            ? getDefaultBackgrounds().dark[0]
+                            : getDefaultBackgrounds().light[0]
+                        }75`}
+                        endColor={`${
+                          colorMode === 'dark'
+                            ? getDefaultBackgrounds().dark[1]
+                            : getDefaultBackgrounds().light[1]
+                        }75`}
+                      />
+                    </motion.div>
+                  </Box>
+                ))}
+              </>
+            ) : (
+              <>
+                {servers.map((server, idx) => (
+                  <Fragment key={server.serverNumber}>
+                    <CompactServerList
+                      {...server}
+                      timeLeft={counter[idx] - mapChangeEstimate}
+                      isLoading={isLoading}
+                      isSuccess={isSuccess}
                     />
-                  </motion.div>
-                </Box>
-              ))}
-            </Box>
-          )}
+
+                    <Divider my={1} _last={{ display: 'none' }} />
+                  </Fragment>
+                ))}
+              </>
+            )}
+          </Box>
         </Flex>
       </Center>
+      {/* Second dashboard design */}
       {/* <Box>
         <Heading as='h2' textAlign='center'>
           All servers

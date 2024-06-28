@@ -87,7 +87,7 @@ const MapDetailCell = memo<MapDetailCellProps>(
               justifyContent='space-around'
               w='full'
               h='fit'
-              gap={{ base: 3, md: 6 }}
+              gap={6}
             >
               <Text>Author:</Text>
               <Text>World record:</Text>
@@ -104,7 +104,7 @@ const MapDetailCell = memo<MapDetailCellProps>(
               justifyContent='space-around'
               w='full'
               h='fit'
-              gap={{ base: 3, md: 6 }}
+              gap={6}
             >
               <Text fontSize='lg' fontWeight='400'>
                 {data.author}
@@ -133,14 +133,14 @@ const MapDetailCell = memo<MapDetailCellProps>(
               letterSpacing='0.2em'
               fontSize='lg'
               fontWeight='400'
-              h='fit'
+              h='fit-content'
             >
               <VStack
                 align='start'
-                justifyContent='space-between'
+                justifyContent='space-around'
                 w='full'
                 h='full'
-                gap={{ base: 3, md: 6 }}
+                gap={6}
               >
                 <Tooltip
                   label={`Rated Difficulty: ${data.rating}`}
@@ -158,7 +158,7 @@ const MapDetailCell = memo<MapDetailCellProps>(
                 align='center'
                 w='full'
                 h='fit'
-                gap={{ base: 3, md: 6 }}
+                gap={4}
               >
                 <MapDifficultyCell
                   difficulty={data.difficulty}

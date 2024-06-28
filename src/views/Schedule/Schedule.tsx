@@ -151,10 +151,6 @@ const Spreadsheet = () => {
     overscan: 10,
   });
 
-  const columnFilterValue = table
-    .getHeaderGroups()[0]
-    .headers[2].column.getFilterValue();
-
   const { colorMode } = useColorMode();
 
   const rowBGcolor = toggled => {

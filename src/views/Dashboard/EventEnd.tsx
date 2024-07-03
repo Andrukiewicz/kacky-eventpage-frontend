@@ -23,7 +23,7 @@ const rank = {
   bronze: { color: '#CD7F32', name: 'bronze', text: 'Not bad!' },
   silver: { color: '#C0C0C0', name: 'silver', text: 'Wow!' },
   gold: { color: '#FFD700', name: 'gold', text: 'Impressive!' },
-  kacky: { color: '#fc2f21', name: 'kacky', text: 'Nice! You won KR4!' },
+  kacky: { color: '#fc2f21', name: 'kacky', text: 'Nice! You are the best!' },
 };
 
 const EventEnd = () => {
@@ -35,13 +35,13 @@ const EventEnd = () => {
   const theme = useTheme();
 
   const getRank = () => {
-    if (finishes < 10) return rank.none;
-    if (finishes < 25) return rank.plastic;
-    if (finishes < 50) return rank.bronze;
-    if (finishes < 65) return rank.silver;
-    if (finishes === 69) return rank.kacky;
-    if (finishes < 75) return rank.gold;
-    if (finishes === 75) return rank.kacky;
+    if (finishes < 1) return rank.none;
+    if (finishes < 15) return rank.plastic;
+    if (finishes < 25) return rank.bronze;
+    if (finishes < 40) return rank.silver;
+    // if (finishes === 69) return rank.kacky;
+    if (finishes < 50) return rank.gold;
+    if (finishes === 50) return rank.kacky;
 
     return rank.none;
   };
@@ -60,7 +60,11 @@ const EventEnd = () => {
   }, [data, isSuccess]);
 
   return (
-    <Stack spacing={16} px={{ base: 4, md: 8 }} textAlign='center'>
+    <Stack
+      spacing={{ base: 8, md: 14 }}
+      px={{ base: 4, md: 8 }}
+      textAlign='center'
+    >
       <Stack>
         <Text
           textShadow='glow'
@@ -82,7 +86,7 @@ const EventEnd = () => {
       {authentication.isLoggedIn ? (
         <Flex
           justify='center'
-          gap={{ base: '4rem', md: '6rem' }}
+          gap={{ base: 4, md: 6 }}
           direction={{ base: 'column', md: 'row' }}
           align='center'
           w='full'
@@ -122,10 +126,10 @@ const EventEnd = () => {
           ) : null}
 
           <Box
-            m='-14rem'
+            // m='-14rem'
             order={2}
             bgGradient='radial(rgba(74, 252, 71, 0.1) 0%, transparent 60%)'
-            p={48}
+            // p={48}
             position='relative'
           >
             <CircularProgress
@@ -137,13 +141,13 @@ const EventEnd = () => {
               thickness='1px'
               min={0}
               // This is static please grab length of maps for event
-              max={75}
+              max={50}
               color='green.300'
               value={finishes}
               size='15rem'
               filter='drop-shadow(0px 0px 20px #4afc47);'
             >
-              <Text
+              {/* <Text
                 position='absolute'
                 fontSize='sm'
                 color='red'
@@ -151,14 +155,14 @@ const EventEnd = () => {
                 style={{ textWrap: 'balance' }}
               >
                 Max finishes is static please grab length of maps for event
-              </Text>
+              </Text> */}
               <CircularProgressLabel
                 fontSize='4xl'
                 color='green.300'
                 letterSpacing='0.2em'
               >
                 {/* This is static please grab length of maps for event */}
-                {finishes} / 75
+                {finishes} / 50
               </CircularProgressLabel>
             </CircularProgress>
           </Box>

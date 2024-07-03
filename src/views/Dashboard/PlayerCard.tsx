@@ -5,9 +5,10 @@ type TPlayerCard = {
   rank: number;
   fins: number;
   avg: number;
+  wrs: number;
 };
 
-const PlayerCard = ({ name, rank, fins, avg }: TPlayerCard) => {
+const PlayerCard = ({ name, rank, fins, avg, wrs }: TPlayerCard) => {
   let rankcolor = '#000000';
   let medal = '';
   if (rank === 1) {
@@ -40,6 +41,7 @@ const PlayerCard = ({ name, rank, fins, avg }: TPlayerCard) => {
       </Text>
       <Text fontSize='lg'>Fins: {fins}</Text>
       <Text fontSize='lg'>Average: {avg}</Text>
+      <Text fontSize='lg'>Wr's: {wrs}</Text>
     </Flex>
   );
 };

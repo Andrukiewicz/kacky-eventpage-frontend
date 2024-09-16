@@ -19,9 +19,16 @@ import {
   Flex,
   Button,
   useBreakpointValue,
+  Link,
+  useDisclosure,
 } from '@chakra-ui/react';
 
-import { MdArrowDownward, MdArrowUpward, MdArrowOutward } from 'react-icons/md';
+import {
+  MdArrowDownward,
+  MdArrowUpward,
+  MdArrowOutward,
+  MdOutlineLogin,
+} from 'react-icons/md';
 
 import {
   flexRender,
@@ -48,11 +55,37 @@ import {
 import MapDetailCell from '@/components/HuntingScheduleTableCells/MapDetailCell';
 import { donutChartOptionsCharts1 } from '../Dashboard/EventsProgress';
 import { FormattedMap, mergeSheetsAndPBs } from '@/components/SheetOperations';
+import AuthModal from '@/components/Header/AuthModal/AuthModal';
 
 const Hunting = () => {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const { authentication } = useContext(AuthContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  if (!authentication.isLoggedIn)
+    return (
+      <Center w='full'>
+        <VStack>
+          <Text>Login and fill your profile to see this data.</Text>
+          <Button
+            aria-label='Log in'
+            variant='ghost'
+            p={{ base: 3, md: 4 }}
+            rounded='10'
+            onClick={onOpen}
+            h='full'
+            display='flex'
+            flexDirection='column'
+            backgroundColor={'transparent'}
+            filter={colorMode === 'dark' ? theme.shadows.dropGlow : 'none'}
+          >
+            <Text fontSize={'md'}>Log in</Text>
+          </Button>
+        </VStack>
+        <AuthModal isOpen={isOpen} onClose={onClose} />
+      </Center>
+    );
 
   const defaultType = 'kk';
   const defaultEdition = 1;
@@ -282,7 +315,7 @@ const Hunting = () => {
   });
 
   useEffect(() => {
-    if (eventsIsSuccess) {
+    if (eventsIsSuccess && authentication.isLoggedIn) {
       // Filter events
       const kkEventData = eventsData
         .filter(event => event.type === 'KK')
@@ -310,7 +343,7 @@ const Hunting = () => {
   ]);
 
   useEffect(() => {
-    if (isSuccessKK) {
+    if (isSuccessKK && authentication.isLoggedIn) {
       const kkseries = performanceKK.map(edition => edition.fins);
       const kkoptions = { ...donutChartOptionsCharts1 };
       kkoptions.labels = performanceKK.map(
@@ -341,7 +374,7 @@ const Hunting = () => {
   ]);
 
   useEffect(() => {
-    if (isSuccessKR) {
+    if (isSuccessKR && authentication.isLoggedIn) {
       const krseries = performanceKR.map(edition => edition.fins);
       const kroptions = { ...donutChartOptionsCharts1 };
       kroptions.labels = performanceKR.map(
@@ -360,13 +393,13 @@ const Hunting = () => {
   ]);
 
   useEffect(() => {
-    if (sheetIsSuccess && pbsIsSuccess) {
+    if (sheetIsSuccess && pbsIsSuccess && authentication.isLoggedIn) {
       const formattedData = mergeSheetsAndPBs(sheetData, pbs);
       setTableData(formattedData);
     }
-  }, [sheetData, sheetIsSuccess, pbs, pbsIsSuccess]);
+  }, [sheetData, sheetIsSuccess, pbs, pbsIsSuccess, authentication.isLoggedIn]);
 
-  // const [state, setState] = React.useState({
+  // const [state, setState] = useState({
   //   ...table.initialState, //populate the initial state with all of the default state values from the table instance
   // });
 

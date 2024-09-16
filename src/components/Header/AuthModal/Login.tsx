@@ -78,6 +78,8 @@ const Login = ({ setMode, onClose }: AuthModalProps) => {
         isClosable: true,
       });
 
+      window.location.reload();
+
       onClose();
     },
     onError: (error: any) => {

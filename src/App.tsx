@@ -71,6 +71,7 @@ const App = () => {
     status: 'active',
     type: '',
     edition: 0,
+    start: new Date('2024-11-01T20:00:00.000Z'),
   });
 
   // EventSwitcher component with typed props and return type
@@ -94,7 +95,7 @@ const App = () => {
     queryFn: async () => await eventLiveState(),
     refetchOnWindowFocus: false,
     retry: false,
-    refetchInterval: 30000,
+    refetchInterval: 60000,
   });
 
   useEffect(() => {
@@ -104,12 +105,14 @@ const App = () => {
           status: localStorage.getItem('eventLiveStatus') || eventStatus.status,
           type: eventStatus.type?.toLowerCase() || '',
           edition: eventStatus.edition || 0,
+          start: new Date(eventStatus.start) || Date.now(),
         });
       } else {
         setEvent({
           status: eventStatus.status,
           type: eventStatus.type?.toLowerCase() || '',
           edition: eventStatus.edition || 0,
+          start: new Date(eventStatus.start) || Date.now(),
         });
       }
     }

@@ -89,15 +89,9 @@ const MapDetailCell = memo<MapDetailCellProps>(
               h='fit'
               gap={6}
             >
-              <Text>Author:</Text>
-              <Text>World record:</Text>
-              <Text>
-                {authentication.isLoggedIn ? (
-                  <>Personal Best:</>
-                ) : (
-                  <>WR Holder:</>
-                )}
-              </Text>
+              <Text>AT:</Text>
+              <Text>WR:</Text>
+              <Text>{authentication.isLoggedIn ? <>PB:</> : <>WR:</>}</Text>
             </VStack>
             <VStack
               align='start'

@@ -7,9 +7,11 @@ import {
   List,
   ListItem,
   Heading,
+  VStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
+import EventContext from '@/context/EventContext';
 
 const PreEvent = () => {
   interface TimerState {
@@ -19,15 +21,22 @@ const PreEvent = () => {
     seconds: string;
   }
 
-  const eventStart: DateTime = DateTime.fromISO('2023-08-18T20:00:00.000', {
+  const { event } = useContext(EventContext);
+
+  const eventStart: DateTime = DateTime.fromISO(event.start.toISOString(), {
     zone: 'CET',
   });
-  const mappingDeadline: DateTime = DateTime.fromISO(
-    '2023-07-31T22:00:00.000',
-    {
-      zone: 'CET',
-    }
-  );
+
+  // Calculate the end of the month
+  const endOfMonth = eventStart
+    .endOf('month') // Move to the end of the month
+    .setZone(DateTime.local().zoneName) // Set to the user's local timezone
+    .set({ hour: 23, minute: 59, second: 59, millisecond: 0 }); // Set time to 23:59:59
+
+  const mappingDeadline: DateTime = eventStart
+    .minus({ days: 12 })
+    .setZone(DateTime.local().zoneName)
+    .set({ hour: 23, minute: 59, second: 59, millisecond: 0 });
 
   function updateTimer(diffDate: DateTime): TimerState {
     const now = DateTime.now();
@@ -77,27 +86,6 @@ const PreEvent = () => {
     );
   }
 
-  function toCETtoUserTime(datetimeString: string): string {
-    const inputDateTime: DateTime = DateTime.fromISO(datetimeString, {
-      zone: 'Europe/Berlin',
-    });
-    const userTimezone = DateTime.local().zoneName;
-    const userDateTime = inputDateTime.setZone(userTimezone);
-
-    const intlDate = userDateTime.toLocaleString({
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    const intlTime = userDateTime.toLocaleString({
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    });
-
-    return `${intlDate.toString()}, ${intlTime.toString()} (${userDateTime.toFormat('ZZZZ')})`;
-  }
-
   return (
     <Stack
       spacing={8}
@@ -105,40 +93,54 @@ const PreEvent = () => {
       mb={32}
       px={{ base: 4, md: 8 }}
       textAlign='center'
-      justify='center'
-      align='center'
     >
       <Heading
         fontWeight='500'
         textShadow='glow'
         letterSpacing='0.2em'
         fontSize={{ base: '2xl', md: '4xl' }}
+        gap={2}
+        flexDir={'column'}
+        display={'flex'}
         m={0}
       >
-        <Text>Kacky Reloaded 4</Text>
-        <Text>August 2023</Text>
+        {event.type === 'kr' ? (
+          <Text>Kacky Reloaded {event.edition}</Text>
+        ) : event.type === 'kk' ? (
+          <Text>Kackiest Kacky {event.edition}</Text>
+        ) : (
+          <Text>Kacky Remixed {event.edition}</Text>
+        )}
+        {/* Format the Date using Luxon */}
+        <Text>{DateTime.fromJSDate(event.start).toFormat('dd.MM.yy')}</Text>
       </Heading>
       <Center>
-        <HStack
+        <VStack
           fontWeight='500'
           textShadow='glow'
           letterSpacing='0.2em'
           fontSize={{ base: '2xl', md: '4xl' }}
         >
-          <Text>{`${remainingTime.days}`}</Text>
-          <Text>:</Text>
-          <Text>{`${remainingTime.hours}`}</Text>
-          <Text>:</Text>
-          <Text>{`${remainingTime.minutes}`}</Text>
-          <Text>:</Text>
-          <Text>{`${remainingTime.seconds}`}</Text>
-        </HStack>
+          <Text>
+            Starts in{' '}
+            {parseInt(remainingTime.days) > 0 && `${remainingTime.days} days`}
+          </Text>
+          {parseInt(remainingTime.days) < 1 && (
+            <HStack>
+              <Text>{`${remainingTime.hours}`}</Text>
+              <Text>:</Text>
+              <Text>{`${remainingTime.minutes}`}</Text>
+              <Text>:</Text>
+              <Text>{`${remainingTime.seconds}`}</Text>
+            </HStack>
+          )}
+        </VStack>
       </Center>
       <Center pt={2}>
         <div
           style={{
             textAlign: 'left',
-            width: '66%',
+            width: '100%',
             lineHeight: '2',
             fontSize: 'larger',
             textTransform: 'none',
@@ -153,37 +155,162 @@ const PreEvent = () => {
           >
             General Info:
           </Text>
-          <List>
+          <List display={'flex'} flexDirection={'column'} spacing={4}>
             <ListItem>
-              📅 Duration: {toCETtoUserTime('2023-08-18T20:00:00.000')} -{' '}
-              {toCETtoUserTime('2023-09-17T22:00:00.000')}
+              <Text>📅 Duration:</Text>
+              <Text>
+                {eventStart.setZone(DateTime.local().zoneName).toLocaleString({
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  second: 'numeric',
+                })}{' '}
+                -{' '}
+                {endOfMonth.toLocaleString({
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  second: 'numeric',
+                })}
+              </Text>
             </ListItem>
             <ListItem>
-              🎮 Servers: Join the servers in the &quot;Kacky Reloaded&quot;
-              club (playing KR4 requires TM2020 Standard Access on PC)
+              <Text>📬 Mapping Deadline:</Text>
+              <Text>
+                {eventStart
+                  .minus({ days: 12 })
+                  .setZone(DateTime.local().zoneName)
+                  .set({ hour: 23, minute: 59, second: 59, millisecond: 0 })
+                  .toLocaleString({
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                  })}
+              </Text>
+              <Text>
+                {isMappingEnded()
+                  ? ` (Closes in ${parseInt(mappingEnd.days) > 0 && `${mappingEnd.days} days`} ${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
+                  : ' - Mapping time is over!'}
+              </Text>
             </ListItem>
-            <ListItem>🗺️ Maps: Kacky Reloaded #226 - #300</ListItem>
             <ListItem>
-              🌐 Kacky Event-Website:{' '}
-              <Link href='https://kacky.gg'>https://kacky.gg/</Link>
+              🎮 Servers:
+              {event.type === 'kr' ? (
+                <>
+                  <Text>Join the official Kacky Reloaded club</Text>
+                  <Text>
+                    (playing KR requires TM2020 Standard Access on PC)
+                  </Text>
+                </>
+              ) : event.type === 'kk' ? (
+                <>
+                  <Text>Join the Kackiest Kacky servers here</Text>
+                  <Text>
+                    🎮 Server1:{' '}
+                    <Link
+                      isExternal
+                      textDecoration='underline'
+                      textColor={'blue.400'}
+                    >
+                      tmtp://#addfavourite=sky_event
+                    </Link>
+                  </Text>
+                  <Text>
+                    🎮 Server2:{' '}
+                    <Link
+                      isExternal
+                      textDecoration='underline'
+                      textColor={'blue.400'}
+                    >
+                      tmtp://#addfavourite=sky_event2
+                    </Link>
+                  </Text>
+                  <Text>
+                    🎮 Server3:{' '}
+                    <Link
+                      isExternal
+                      textDecoration='underline'
+                      textColor={'blue.400'}
+                    >
+                      tmtp://#addfavourite=sky_event3
+                    </Link>
+                  </Text>
+                </>
+              ) : (
+                <>Kacky Remixed</>
+              )}
+            </ListItem>
+            <ListItem display={'flex'} gap={2}>
+              🗺️ Maps:{' '}
+              {event.type === 'kr' ? (
+                <Text>Kacky Reloaded {event.edition}</Text>
+              ) : event.type === 'kk' ? (
+                <Text>Kackiest Kacky {event.edition}</Text>
+              ) : (
+                <Text>Kacky Remixed {event.edition}</Text>
+              )}{' '}
+              {/* CHANGE THIS TO DYNAMIC FROM BACKEND!!! */}
+              #301 - #375
             </ListItem>
             <ListItem>
-              📊 Kacky Statistics & History:{' '}
-              <Link href='https://kackyreloaded.com/'>
-                https://kackyreloaded.com/
+              🌐 Official Kacky Event-Website:{' '}
+              <Link
+                isExternal
+                textDecoration='underline'
+                textColor={'blue.400'}
+                href='https://kacky.gg'
+              >
+                https://kacky.gg/
               </Link>
+            </ListItem>
+            <ListItem>
+              📊 Alternative Kacky Statistics & History:{' '}
+              {event.type === 'kr' ? (
+                <Link
+                  isExternal
+                  textDecoration='underline'
+                  textColor={'blue.400'}
+                  href='https://kackyreloaded.com/'
+                >
+                  https://kackyreloaded.com/
+                </Link>
+              ) : event.type === 'kk' ? (
+                <Link
+                  isExternal
+                  textDecoration='underline'
+                  textColor={'blue.400'}
+                  href='https://kackiestkacky.com/'
+                >
+                  https://kackiestkacky.com/
+                </Link>
+              ) : (
+                <Link
+                  isExternal
+                  textDecoration='underline'
+                  textColor={'blue.400'}
+                  href='https://kackyreloaded.com/'
+                >
+                  https://kackyreloaded.com/
+                </Link>
+              )}
             </ListItem>
             <ListItem>
               🔗 Discord Invite:{' '}
-              <Link href='http://kacky.gg/discord'>
+              <Link
+                isExternal
+                textDecoration='underline'
+                textColor={'blue.400'}
+                href='http://kacky.gg/discord'
+              >
                 http://kacky.gg/discord
               </Link>
-            </ListItem>
-            <ListItem>
-              📬 Mapping Deadline: {toCETtoUserTime('2023-07-31T22:00:00.000')}
-              {isMappingEnded()
-                ? ` (Closes in ${mappingEnd.days}:${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
-                : ' - I hope you submitted already'}
             </ListItem>
           </List>
         </div>
@@ -194,7 +321,7 @@ const PreEvent = () => {
           <div
             style={{
               textAlign: 'left',
-              width: '66%',
+              width: '100%',
               lineHeight: '2',
               fontSize: 'larger',
               textTransform: 'none',
@@ -209,14 +336,45 @@ const PreEvent = () => {
             >
               Mapping Information:
             </Text>
-            Do you want to build a map for KR4? Join the Kacky Discord Server (
-            <Link href='http://kacky.gg/discord'>http://kacky.gg/discord</Link>)
-            and check channel #📢kacky-reloaded-4
-            <br />
-            It get&apos;s updated with the latest info and rules.
-            <br />
-            Have questions about building a map for Kacky? Ask them in
-            #kacky-reloaded!
+            <Text>
+              Do you want to build a map for{' '}
+              {event.type === 'kr' ? (
+                <>Kacky Reloaded {event.edition}</>
+              ) : event.type === 'kk' ? (
+                <>Kackiest Kacky {event.edition}</>
+              ) : (
+                <>Kacky Remixed {event.edition}</>
+              )}{' '}
+              Join the Kacky Discord Server (
+              <Link
+                isExternal
+                textDecoration='underline'
+                textColor={'blue.400'}
+                href='http://kacky.gg/discord'
+              >
+                http://kacky.gg/discord
+              </Link>
+              ) and check channel
+            </Text>
+            {event.type === 'kr' ? (
+              <Text textColor={'blue.400'}># kr{event.edition}-mapping</Text>
+            ) : event.type === 'kk' ? (
+              <Text textColor={'blue.400'}># kk{event.edition}-mapping</Text>
+            ) : (
+              <Text textColor={'blue.400'}># kx{event.edition}-mapping</Text>
+            )}
+            <Text>
+              It get&apos;s updated with the latest info and rules. Have
+              questions about building a map for Kacky?
+            </Text>
+            <Text>Ask them in</Text>
+            {event.type === 'kr' ? (
+              <Text textColor={'blue.400'}># kr-chat</Text>
+            ) : event.type === 'kk' ? (
+              <Text textColor={'blue.400'}># kk-chat</Text>
+            ) : (
+              <Text textColor={'blue.400'}># kx-chat</Text>
+            )}
           </div>
         </Center>
       )}

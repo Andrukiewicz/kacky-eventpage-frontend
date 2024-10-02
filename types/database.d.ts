@@ -3,6 +3,7 @@ type EventStatus = {
   status: string;
   type: string;
   edition: number;
+  start: Date;
 };
 
 type AvailableEvents = {

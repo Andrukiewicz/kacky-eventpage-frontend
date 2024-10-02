@@ -1,4 +1,4 @@
-import { HStack, Text } from '@chakra-ui/react';
+import { HStack, Text, VStack } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import { memo, useContext } from 'react';
 import AuthContext from '@/context/AuthContext';
@@ -12,7 +12,7 @@ const MapWRCell = memo<MapWRCellProps>(({ wrScore, wrHolder }) => {
   const { authentication } = useContext(AuthContext);
 
   return (
-    <HStack gap={1} alignItems={'baseline'}>
+    <VStack gap={1} alignItems={'baseline'}>
       <Text fontSize='lg' fontWeight='400'>
         {wrScore !== 0
           ? DateTime.fromMillis(wrScore).toFormat('mm:ss.SSS')
@@ -21,7 +21,7 @@ const MapWRCell = memo<MapWRCellProps>(({ wrScore, wrHolder }) => {
       {authentication.isLoggedIn ? (
         <Text fontSize={'xs'}>by {wrHolder !== '' ? wrHolder : '-'}</Text>
       ) : null}
-    </HStack>
+    </VStack>
   );
 });
 

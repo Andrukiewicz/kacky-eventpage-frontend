@@ -4,6 +4,7 @@ export interface EventContextProps {
   status: string;
   type: string;
   edition: number;
+  start: Date;
 }
 // Define your context interface
 export type EventContextStateProps = {
@@ -13,7 +14,7 @@ export type EventContextStateProps = {
 };
 
 const defaultAuthState: EventContextStateProps = {
-  event: { status: '', type: '', edition: 0 },
+  event: { status: '', type: '', edition: 0, start: new Date() },
   setEvent: () => {},
 };
 

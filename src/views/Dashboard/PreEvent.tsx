@@ -36,7 +36,7 @@ const PreEvent = () => {
   const mappingDeadline: DateTime = eventStart
     .minus({ days: 12 })
     .setZone(DateTime.local().zoneName)
-    .set({ hour: 23, minute: 59, second: 59, millisecond: 0 });
+    .set({ hour: 13, minute: 0, second: 0, millisecond: 0 });
 
   function updateTimer(diffDate: DateTime): TimerState {
     const now = DateTime.now();
@@ -125,6 +125,11 @@ const PreEvent = () => {
             Starts in{' '}
             {parseInt(remainingTime.days) > 0 && `${remainingTime.days} days`}
           </Text>
+          <Text>
+            {isMappingEnded()
+              ? ` (Mapping closes in ${parseInt(mappingEnd.days) > 0 ? `${mappingEnd.days} days` : ''} ${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
+              : 'Mapping time is over!'}
+          </Text>
           {parseInt(remainingTime.days) < 1 && (
             <HStack>
               <Text>{`${remainingTime.hours}`}</Text>
@@ -181,23 +186,19 @@ const PreEvent = () => {
             <ListItem>
               <Text>📬 Mapping Deadline:</Text>
               <Text>
-                {eventStart
-                  .minus({ days: 12 })
-                  .setZone(DateTime.local().zoneName)
-                  .set({ hour: 23, minute: 59, second: 59, millisecond: 0 })
-                  .toLocaleString({
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                  })}
+                {mappingDeadline.toLocaleString({
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  second: 'numeric',
+                })}
               </Text>
               <Text>
                 {isMappingEnded()
-                  ? ` (Closes in ${parseInt(mappingEnd.days) > 0 && `${mappingEnd.days} days`} ${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
-                  : ' - Mapping time is over!'}
+                  ? ` (Mapping closes in ${parseInt(mappingEnd.days) > 0 ? `${mappingEnd.days} days` : ''} ${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
+                  : 'Mapping time is over!'}
               </Text>
             </ListItem>
             <ListItem>

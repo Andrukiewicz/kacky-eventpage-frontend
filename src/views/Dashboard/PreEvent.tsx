@@ -36,7 +36,7 @@ const PreEvent = () => {
   const mappingDeadline: DateTime = eventStart
     .minus({ days: 12 })
     .setZone(DateTime.local().zoneName)
-    .set({ hour: 13, minute: 0, second: 0, millisecond: 0 });
+    .set({ hour: 23, minute: 59, second: 59, millisecond: 0 });
 
   function updateTimer(diffDate: DateTime): TimerState {
     const now = DateTime.now();
@@ -122,13 +122,8 @@ const PreEvent = () => {
           fontSize={{ base: '2xl', md: '4xl' }}
         >
           <Text>
-            Starts in{' '}
+            Event starts in{' '}
             {parseInt(remainingTime.days) > 0 && `${remainingTime.days} days`}
-          </Text>
-          <Text>
-            {isMappingEnded()
-              ? ` (Mapping closes in ${parseInt(mappingEnd.days) > 0 ? `${mappingEnd.days} days` : ''} ${mappingEnd.hours}:${mappingEnd.minutes}:${mappingEnd.seconds})`
-              : 'Mapping time is over!'}
           </Text>
           {parseInt(remainingTime.days) < 1 && (
             <HStack>
@@ -139,6 +134,23 @@ const PreEvent = () => {
               <Text>{`${remainingTime.seconds}`}</Text>
             </HStack>
           )}
+          <HStack>
+            {isMappingEnded() ? (
+              <VStack>
+                <Text>Mapping closes in</Text>
+                {parseInt(mappingEnd.days) > 0 ? (
+                  <Text>{mappingEnd.days} days</Text>
+                ) : (
+                  ''
+                )}
+                <Text display='flex' align={'center'}>
+                  {mappingEnd.hours}:{mappingEnd.minutes}:{mappingEnd.seconds}
+                </Text>
+              </VStack>
+            ) : (
+              <Text>Mapping time is over!</Text>
+            )}
+          </HStack>
         </VStack>
       </Center>
       <Center pt={2}>

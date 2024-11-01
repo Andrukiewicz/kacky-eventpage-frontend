@@ -39,6 +39,9 @@ import WRHolders from './views/WRHolders/WRHolders';
 // Views - Streamer Info
 import StreamerInfo from './views/StreamerInfo/StreamerInfo';
 
+// Views - Player info
+import Player from './views/Player/Player';
+
 // Views - Admin
 import AdminIndex from './views/Admin/AdminIndex';
 import EventManager from './views/Admin/EventManager';
@@ -131,6 +134,8 @@ const App = () => {
               <Route path='leaderboard' element={<Leaderboard />} />
               <Route path='profile' element={<Profile />} />
               <Route path='glance' element={<Glance />} />
+              {/* map fins  */}
+              <Route path='player/:playerName' element={<Player />} />
               {/* Move admin to separate Route path group and add new layout */}
               <Route path='/kackend' element={<AdminIndex />} />
               <Route path='/kackend/events' element={<EventManager />} />

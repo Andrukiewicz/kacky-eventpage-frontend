@@ -289,6 +289,22 @@ export async function getFinishes(token: string): Promise<FinishesResponse> {
   return finishesResponse;
 }
 
+export async function getMapFins(playerName: string): Promise<MapFinsResponse> {
+  const response = await fetch(`${url}/event/${playerName}/finned`, {
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const mapFinsResponse: MapFinsResponse = await response.json();
+  return mapFinsResponse;
+}
+
 export function getMapImageUrl(eventType: string, mapNumber: number): string {
   // Remove "[v2]" and similar (assuming only spaces separate version info)
   const cleanedMapNumber = mapNumber.toString().split(' ')[0];

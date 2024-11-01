@@ -53,7 +53,7 @@ const Dashboard = () => {
           serverNumber: server.serverNumber,
           maps: server.maps,
           serverDifficulty: server.serverDifficulty,
-          serverJoin: server.serverJoin,
+          serverJoin: server.serverJoin || '',
           timeLimit: server.timeLimit * 60,
           timeLeft: server.timeLeft + mapChangeEstimate, // Update timeLeft here
           isLoading: isLoading,

@@ -133,6 +133,11 @@ type FinishesResponse = {
   mapids: number[]; // Array of numbers
 };
 
+interface MapFinsResponse {
+  finished: number;
+  mapids: string[];
+}
+
 interface PersonalBest {
   date: number;
   kacky_rank: number;

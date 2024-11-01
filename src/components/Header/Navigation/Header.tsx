@@ -1,5 +1,5 @@
 import { getDefaultBackgrounds } from '@/utils/theme';
-import { Center, useColorMode, VStack } from '@chakra-ui/react';
+import { Box, Center, useColorMode, VStack } from '@chakra-ui/react';
 import DesktopTopRowNav from './Desktop/DesktopTopRowNav';
 import DesktopBottomRowNav from './Desktop/DesktopBottomRowNav';
 import MobileNavigation from './HeaderMobile';

@@ -23,15 +23,16 @@ const PreEvent = () => {
 
   const { event } = useContext(EventContext);
 
-  const eventStart: DateTime = DateTime.fromISO(event.start.toISOString(), {
-    zone: 'CET',
-  });
+  const utcDate = '2024-11-01T19:00:00.000Z'; // ISO-8601 formatted
 
+  // const eventStart: DateTime = DateTime.fromISO(event.start.toISOString(), {
+  //   zone: 'CET',
+  // });
+  const eventStart: DateTime = DateTime.fromISO(utcDate, {
+    zone: 'utc',
+  });
   // Calculate the end of the month
-  const endOfMonth = eventStart
-    .endOf('month') // Move to the end of the month
-    .setZone(DateTime.local().zoneName) // Set to the user's local timezone
-    .set({ hour: 23, minute: 59, second: 59, millisecond: 0 }); // Set time to 23:59:59
+  const endOfMonth = eventStart.endOf('month'); // Move to the end of the month
 
   const mappingDeadline: DateTime = eventStart
     .minus({ days: 12 })
@@ -147,9 +148,9 @@ const PreEvent = () => {
                   {mappingEnd.hours}:{mappingEnd.minutes}:{mappingEnd.seconds}
                 </Text>
               </VStack>
-            ) : (
+            ) : parseInt(mappingEnd.days) > 1 ? (
               <Text>Mapping time is over!</Text>
-            )}
+            ) : null}
           </HStack>
         </VStack>
       </Center>

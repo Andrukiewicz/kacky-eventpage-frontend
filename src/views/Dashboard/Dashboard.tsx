@@ -1,13 +1,7 @@
 import {
   Box,
   Skeleton,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   useColorMode,
-  Heading,
   Center,
   Flex,
   HStack,
@@ -16,54 +10,26 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { useEffect, useState, useContext, useRef, Fragment } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-
-import ServerCard from './ServerCard';
 
 import { getDashboardData } from '@/api/api';
 
 import AuthContext from '@/context/AuthContext';
+import EventContext from '@/context/EventContext';
 import { getDefaultBackgrounds } from '@/utils/theme';
 import { IMAGES } from '@/utils/Images';
 import CompactServerList from '@/components/ServerWidgets/CompactServerList';
 
 const mapChangeEstimate = 0;
 
-// Difficulty Badge Color Array with Types
-const diffBadgeColorArr: Record<Difficulty, DiffBadgeColor> = {
-  white: { variant: 'white', text: 'White' },
-  green: { variant: 'green', text: 'Green' },
-  blue: { variant: 'blue', text: 'Blue' },
-  red: { variant: 'red', text: 'Red' },
-  black: { variant: 'black', text: 'Black' },
-  hard: { variant: 'orange', text: 'Hard' },
-  harder: { variant: 'red', text: 'Harder' },
-  hardest: { variant: 'purple', text: 'Hardest' },
-};
-
-// Difficulty Levels with Default Label
-type Difficulty =
-  | 'white'
-  | 'green'
-  | 'blue'
-  | 'red'
-  | 'black'
-  | 'hard'
-  | 'harder'
-  | 'hardest';
-
-interface DiffBadgeColor {
-  variant: string;
-  text: string;
-}
-
 const Dashboard = () => {
-  const queryClient = useQueryClient();
   const newQueryCount = useRef([0]);
   const { colorMode } = useColorMode();
 
   const { authentication } = useContext(AuthContext);
+  const { event } = useContext(EventContext);
+
   const [servers, setServers] = useState<Server[]>([]);
   const [counter, setCounter] = useState([0]);
 
@@ -75,16 +41,6 @@ const Dashboard = () => {
     refetchInterval: 30000,
     retry: false,
   });
-
-  // Collect all unique difficulty levels
-  const difficultyLevels = Array.from(
-    new Set(servers.map(server => server.serverDifficulty))
-  ) as Difficulty[];
-
-  // Filter servers by difficulty level
-  const filteredServersByDifficulty = difficultyLevels.map(difficulty =>
-    servers.filter(server => server.serverDifficulty === difficulty)
-  );
 
   useEffect(() => {
     if (isSuccess) {
@@ -158,10 +114,20 @@ const Dashboard = () => {
           >
             <Flex justify='space-between' align='center'>
               <HStack align='center'>
-                <Image h='2rem' src={IMAGES.favicon} />
-                <Text fontWeight='bold' fontSize='1.2rem'>
-                  Kackiest Kacky 9
-                </Text>
+                <Image h='2rem' src={IMAGES.kr5battery} />
+                {event.type === 'kr' ? (
+                  <Text fontWeight='bold' fontSize='1.2rem'>
+                    Kacky Reloaded {event.edition}
+                  </Text>
+                ) : event.type === 'kk' ? (
+                  <Text fontWeight='bold' fontSize='1.2rem'>
+                    Kackiest Kacky {event.edition}
+                  </Text>
+                ) : (
+                  <Text fontWeight='bold' fontSize='1.2rem'>
+                    Kacky Remixed {event.edition}
+                  </Text>
+                )}
               </HStack>
             </Flex>
           </Box>

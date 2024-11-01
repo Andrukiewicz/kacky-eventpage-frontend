@@ -47,7 +47,8 @@ const CompactServerList = ({
 
   const nextMapModals = [modalNextMap1, modalNextMap2, modalNextMap3];
 
-  const imageUrl = getMapImageUrl(event.type, maps[0].number);
+  // const imageUrl = getMapImageUrl(event.type, maps[0].number);
+  const imageUrl = getMapImageUrl('kr', 250);
 
   const divRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({

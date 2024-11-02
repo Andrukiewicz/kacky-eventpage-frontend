@@ -38,7 +38,7 @@ const Dashboard = () => {
     queryKey: ['servers', authentication.token],
     queryFn: () => getDashboardData(authentication.token),
     refetchOnWindowFocus: true,
-    // refetchInterval: 30000,
+    refetchInterval: 30000,
     retry: true,
   });
 

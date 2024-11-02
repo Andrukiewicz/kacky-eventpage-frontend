@@ -4,8 +4,6 @@ import {
   Center,
   Text,
   VStack,
-  HStack,
-  Box,
   Grid,
   GridItem,
   useColorMode,

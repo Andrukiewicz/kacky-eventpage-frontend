@@ -72,7 +72,7 @@ const MapImageModal = ({
             <Flex
               direction='column'
               role='group'
-              maxW='250px'
+              maxW={[150, 250]}
               h='full'
               p={4}
               align='flex-start'
@@ -109,9 +109,9 @@ const MapImageModal = ({
               <HStack>
                 <HStack spacing='0' position={'relative'}>
                   <Text
-                    lineHeight='12rem'
+                    lineHeight={['10rem', '12rem', '14rem', '16rem']}
                     // textShadow='glow'
-                    fontSize='16rem'
+                    fontSize={['10rem', '12rem', '14rem', '16rem']}
                     // letterSpacing='0.1em'
                     fontWeight='bold'
                     style={{

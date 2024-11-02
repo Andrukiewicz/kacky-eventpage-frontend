@@ -134,7 +134,6 @@ type FinishesResponse = {
 };
 
 interface MapFinsResponse {
-  finished: number;
   mapids: string[];
 }
 

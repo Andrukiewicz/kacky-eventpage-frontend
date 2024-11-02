@@ -18,16 +18,21 @@ const Player = () => {
   const { playerName } = useParams();
   const { colorMode } = useColorMode();
 
-  const { data: mapfins } = useQuery({
+  const { data: mapfins, isLoading } = useQuery({
     queryKey: ['mapfins', playerName],
     queryFn: () => getMapFins(playerName as string),
     enabled: !!playerName,
     refetchOnWindowFocus: true,
     refetchInterval: 30000,
-    retry: false,
+    retry: true,
   });
 
   const numbers = Array.from({ length: 75 }, (_, i) => i + 301);
+
+  // Function to calculate fin count
+  function getFinCount(mapfins?: MapFinsResponse): number {
+    return mapfins?.mapids.length || 0;
+  }
 
   return (
     <motion.div
@@ -44,44 +49,55 @@ const Player = () => {
             textAlign={'center'}
             style={{ textWrap: 'pretty' }}
           >
-            Maps finished by {playerName}
+            {playerName}
           </Text>
-          <Grid
-            templateColumns={[
-              'repeat(3, 1fr)',
-              'repeat(5, 1fr)',
-              'repeat(10, 1fr)',
-            ]}
-            gap={[2, 2]}
-            justifyItems='center'
-          >
-            {numbers.map(number => {
-              const mapid = number.toString();
-              const isFinished = mapfins?.mapids?.includes(mapid);
-              return (
-                <GridItem
-                  key={mapid}
-                  w={[16, 16]}
-                  h={[16, 16]}
-                  bg={
-                    isFinished
-                      ? 'green.500'
-                      : colorMode === 'dark'
-                        ? 'neutral.800'
-                        : 'neutral.200'
-                  }
-                  borderRadius='md'
-                  display='flex'
-                  justifyContent='center'
-                  alignItems='center'
-                >
-                  <Text fontSize='md' textShadow='glow' fontWeight='hairline'>
-                    {number}
-                  </Text>
-                </GridItem>
-              );
-            })}
-          </Grid>
+          {isLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <>
+              <Text>Maps finished: {getFinCount(mapfins)}/75</Text>
+              <Grid
+                templateColumns={[
+                  'repeat(3, 1fr)',
+                  'repeat(5, 1fr)',
+                  'repeat(10, 1fr)',
+                ]}
+                gap={[2, 2]}
+                justifyItems='center'
+              >
+                {numbers.map(number => {
+                  const mapid = number.toString();
+                  const isFinished = mapfins?.mapids?.includes(mapid);
+                  return (
+                    <GridItem
+                      key={mapid}
+                      w={[16, 16]}
+                      h={[16, 16]}
+                      bg={
+                        isFinished
+                          ? 'green.500'
+                          : colorMode === 'dark'
+                            ? 'neutral.800'
+                            : 'neutral.200'
+                      }
+                      borderRadius='md'
+                      display='flex'
+                      justifyContent='center'
+                      alignItems='center'
+                    >
+                      <Text
+                        fontSize='md'
+                        textShadow='glow'
+                        fontWeight='hairline'
+                      >
+                        {number}
+                      </Text>
+                    </GridItem>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
         </VStack>
       </Center>
     </motion.div>

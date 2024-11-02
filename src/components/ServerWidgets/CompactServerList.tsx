@@ -51,20 +51,20 @@ const CompactServerList = ({
   // const imageUrl = getMapImageUrl('kr', 250);
 
   const divRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({
-    width: 0,
-    height: 0,
-    top: 0,
-    left: 0,
-  });
+  // const [dimensions, setDimensions] = useState({
+  //   width: 0,
+  //   height: 0,
+  //   top: 0,
+  //   left: 0,
+  // });
 
-  useEffect(() => {
-    if (!divRef.current) return;
+  // useEffect(() => {
+  //   if (!divRef.current) return;
 
-    const { width, height, top, left } = divRef.current.getBoundingClientRect();
+  //   const { width, height, top, left } = divRef.current.getBoundingClientRect();
 
-    setDimensions({ width, height, top, left });
-  }, []);
+  //   setDimensions({ width, height, top, left });
+  // }, []);
   return (
     <Box
       // Image fallback doesn't work for some reason for bgImage
@@ -76,8 +76,8 @@ const CompactServerList = ({
       h='full'
       ref={divRef}
     >
-      <AnimatePresence>
-        {timeLeft <= 0 && (
+      {/* <AnimatePresence>
+        {timeLeft === 0 && (
           <motion.div
             key={serverNumber + 'loader'}
             style={{ position: 'absolute', zIndex: 5 }}
@@ -107,9 +107,9 @@ const CompactServerList = ({
             />
           </motion.div>
         )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {timeLeft <= 0 && (
+      </AnimatePresence> */}
+      {/* <AnimatePresence>
+        {timeLeft === 0 && (
           <motion.svg
             style={{ position: 'absolute', zIndex: 5 }}
             width={dimensions.width + 'px'}
@@ -212,7 +212,7 @@ const CompactServerList = ({
             </svg>
           </motion.svg>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       {/* SERVER */}
       <Center w='full' h='full'>
@@ -271,7 +271,7 @@ const CompactServerList = ({
               ></Badge>
             ) : null}
             <HStack gap={4} pl={2}>
-              <Box position='relative' alignContent={'center'} w={'2rem'}>
+              <Box position='relative' alignContent={'center'} w={'3rem'}>
                 <Text
                   fontWeight='medium'
                   fontSize={'2xl'}

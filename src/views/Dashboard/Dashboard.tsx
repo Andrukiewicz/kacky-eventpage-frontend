@@ -38,8 +38,8 @@ const Dashboard = () => {
     queryKey: ['servers', authentication.token],
     queryFn: () => getDashboardData(authentication.token),
     refetchOnWindowFocus: true,
-    refetchInterval: 30000,
-    retry: false,
+    // refetchInterval: 30000,
+    retry: true,
   });
 
   useEffect(() => {

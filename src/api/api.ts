@@ -290,7 +290,7 @@ export async function getFinishes(token: string): Promise<FinishesResponse> {
 }
 
 export async function getMapFins(playerName: string): Promise<MapFinsResponse> {
-  const response = await fetch(`${url}/event/${playerName}/finned`, {
+  const response = await fetch(`${url}/event/${playerName}/finned?string=ids`, {
     headers: {
       Accept: 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
@@ -301,8 +301,10 @@ export async function getMapFins(playerName: string): Promise<MapFinsResponse> {
     throw new Error('Network response was not ok');
   }
 
-  const mapFinsResponse: MapFinsResponse = await response.json();
-  return mapFinsResponse;
+  // Parse the string response into an array of IDs
+  const mapFinsString = await response.text();
+  const mapids = mapFinsString.split(',').map(id => id.trim());
+  return { mapids };
 }
 
 export function getMapImageUrl(eventType: string, mapNumber: number): string {

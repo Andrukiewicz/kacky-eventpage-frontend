@@ -147,7 +147,7 @@ const Spreadsheet = () => {
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: () => 49,
+    estimateSize: () => 15,
     overscan: 10,
   });
 

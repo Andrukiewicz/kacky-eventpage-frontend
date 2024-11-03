@@ -481,37 +481,39 @@ const CompactServerList = ({
                       gap={0}
                       textColor={colorMode === 'dark' ? 'white' : 'black'}
                     >
-                      <Button
-                        as={NavLink}
-                        to={`${serverJoin}`}
-                        position='relative'
-                        w='fit'
-                        fontSize={'xs'}
-                        h='2rem'
-                        p={1}
-                        _hover={{
-                          bg:
+                      {serverJoin && (
+                        <Button
+                          as={NavLink}
+                          to={`${serverJoin}`}
+                          position='relative'
+                          w='fit'
+                          fontSize={'xs'}
+                          h='2rem'
+                          p={1}
+                          _hover={{
+                            bg:
+                              colorMode === 'dark'
+                                ? 'neutral.700 !important'
+                                : 'neutral.300 !important',
+                          }}
+                          fontWeight='bold'
+                          bg={
                             colorMode === 'dark'
-                              ? 'neutral.700 !important'
-                              : 'neutral.300 !important',
-                        }}
-                        fontWeight='bold'
-                        bg={
-                          colorMode === 'dark'
-                            ? 'neutral.800 !important'
-                            : 'neutral.200 !important'
-                        }
-                        textAlign='center'
-                        alignItems={'center'}
-                        justifyContent={'center'}
-                        filter={
-                          colorMode === 'dark'
-                            ? theme.shadows.dropGlowDark
-                            : theme.shadows.dropGlow
-                        }
-                      >
-                        Join
-                      </Button>
+                              ? 'neutral.800 !important'
+                              : 'neutral.200 !important'
+                          }
+                          textAlign='center'
+                          alignItems={'center'}
+                          justifyContent={'center'}
+                          filter={
+                            colorMode === 'dark'
+                              ? theme.shadows.dropGlowDark
+                              : theme.shadows.dropGlow
+                          }
+                        >
+                          Join
+                        </Button>
+                      )}
                     </Flex>
                   </motion.div>
                 </AnimatePresence>

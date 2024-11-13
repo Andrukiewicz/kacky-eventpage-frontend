@@ -105,7 +105,7 @@ const Dashboard = () => {
     return (
     <Center>
       <VStack>
-        <Text fontSize="2xl">Kacky servers are down or in maintenance.</Text>
+        <Text fontSize="2xl">Kacky servers are down for maintenance.</Text>
         <Text fontSize="xl">We are working on a fix.</Text>
         <Text>Thank you for your patience and see you soon.</Text>
       </VStack>

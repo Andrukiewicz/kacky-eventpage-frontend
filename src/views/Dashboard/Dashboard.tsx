@@ -8,6 +8,7 @@ import {
   Image,
   Text,
   Divider,
+  VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState, useContext, useRef, Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -33,6 +34,17 @@ const Dashboard = () => {
   const [servers, setServers] = useState<Server[]>([]);
   const [counter, setCounter] = useState([0]);
 
+  // Check if api is up
+  const { data: api, isError: isApiError, isSuccess: isApiSuccess } = useQuery({
+    queryKey: ['apistatus'],
+    queryFn: async () => await fetch(`https://api.kacky.gg/records/leaderboard/kr/321`),
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+    retry: true,
+  });
+
+  console.log(isApiSuccess)
+
   // Fetch servers data
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ['servers', authentication.token],
@@ -40,6 +52,7 @@ const Dashboard = () => {
     refetchOnWindowFocus: true,
     refetchInterval: 30000,
     retry: true,
+    enabled: isApiSuccess
   });
 
   useEffect(() => {
@@ -69,6 +82,7 @@ const Dashboard = () => {
   }, [data, isSuccess]);
 
   useEffect(() => {
+    if (isSuccess) {
     // const counterCopy = [...counter];
     const timer = setInterval(() => {
       const counterCopy = [...counter]; // Create a copy to avoid mutating original state
@@ -84,7 +98,20 @@ const Dashboard = () => {
     }, 1000);
 
     return () => clearInterval(timer);
+  }
   }, [counter]);
+
+  if (!api || isApiError) {
+    return (
+    <Center>
+      <VStack>
+        <Text fontSize="2xl">Kacky servers are down or in maintenance.</Text>
+        <Text fontSize="xl">We are working on a fix.</Text>
+        <Text>Thank you for your patience and see you soon.</Text>
+      </VStack>
+    </Center>
+    )
+  } else {
 
   return (
     <motion.div
@@ -269,7 +296,7 @@ const Dashboard = () => {
         </Tabs>
       </Box> */}
     </motion.div>
-  );
+  );}
 };
 
 export default Dashboard;

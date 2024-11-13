@@ -6,24 +6,21 @@ import {
   HStack,
   Text,
   VStack,
-  Image,
   Button,
   Badge,
   useDisclosure,
-  Icon,
-  CircularProgressLabel,
   useTheme,
 } from '@chakra-ui/react';
-import { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useContext, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DateTime } from 'luxon';
 import { getMapImageUrl } from '@/api/api';
 // import mapImageFallback from '@/assets/images/mapImageFallback.jpg';
 import EventContext from '@/context/EventContext';
 import { diffBadgeColorArr, getDefaultBackgrounds } from '@/utils/theme';
-import { IMAGES } from '@/utils/Images';
 import { NavLink } from 'react-router-dom';
 import MapImageModal from '../MapImageModal';
+import { MdOutlineArrowRight } from 'react-icons/md';
 
 // eslint-disable-next-line no-unused-vars
 const CompactServerList = ({
@@ -33,7 +30,6 @@ const CompactServerList = ({
   timeLeft,
   serverJoin,
   isSuccess,
-  isLoading,
 }: Server) => {
   const { colorMode } = useColorMode();
 
@@ -331,13 +327,14 @@ const CompactServerList = ({
                         >
                           <HStack
                             // fontWeight='thin'
-                            gap={2}
+                            gap={3}
                             color={
                               colorMode === 'dark'
                                 ? 'neutral.100'
                                 : 'neutral.900'
                             }
                             align='end'
+                            alignItems='center'
                             fontSize={'2xl'}
                             onClick={onOpen}
                             cursor='pointer'
@@ -367,8 +364,41 @@ const CompactServerList = ({
                             >
                               {maps[0].number}
                             </Text>
+                            <MdOutlineArrowRight
+                              fontWeight='bold'
+                              filter={
+                                colorMode === 'dark'
+                                    ? theme.shadows.dropGlowDark
+                                    : theme.shadows.dropGlow
+                              }
+                            >
+                            </MdOutlineArrowRight>
                             <Text
-                              fontSize='sm'
+                              as='span'
+                              fontWeight='bold'
+                              color={
+                                maps[1].finished
+                                  ? colorMode === 'dark'
+                                    ? 'green.300'
+                                    : 'green.500'
+                                  : ''
+                              }
+                              filter={
+                                maps[1].finished
+                                  ? colorMode === 'dark'
+                                    ? theme.shadows.finGlowDark
+                                    : theme.shadows.finGlowLight
+                                  : colorMode === 'dark'
+                                    ? theme.shadows.dropGlowDark
+                                    : theme.shadows.dropGlow
+                              }
+                            >
+                              {maps[1].number}
+                            </Text>
+                            <Text
+                              fontSize='xs'
+                              position={{base: 'absolute'}}
+                              bottom={{base: '0.2rem'}}
                               display={{ base: 'none', sm: 'block' }}
                               filter={
                                 colorMode === 'dark'
@@ -376,8 +406,7 @@ const CompactServerList = ({
                                   : theme.shadows.dropGlow
                               }
                             >
-                              {' '}
-                              by {maps[0].author}{' '}
+                              by {maps[0].author}
                             </Text>
                           </HStack>
                         </motion.div>

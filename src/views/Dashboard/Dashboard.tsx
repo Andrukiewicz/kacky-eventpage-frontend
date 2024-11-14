@@ -9,6 +9,7 @@ import {
   Text,
   Divider,
   VStack,
+  Spinner,
 } from '@chakra-ui/react';
 import { useEffect, useState, useContext, useRef, Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -34,16 +35,25 @@ const Dashboard = () => {
   const [servers, setServers] = useState<Server[]>([]);
   const [counter, setCounter] = useState([0]);
 
-  // Check if api is up
-  const { data: api, isError: isApiError, isSuccess: isApiSuccess } = useQuery({
-    queryKey: ['apistatus'],
-    queryFn: async () => await fetch(`https://api.kacky.gg/records/leaderboard/kr/321`),
-    refetchOnWindowFocus: true,
-    refetchInterval: 30000,
-    retry: true,
-  });
+  const fetchWithTimeout = (url: string, timeout = 3000) => {
+    return Promise.race([
+      fetch(url),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))
+    ]);
+  };
 
-  console.log(isApiSuccess)
+  // Check if api is up twice before showing error
+  const {
+    isError: isApiError,
+    isSuccess: isApiSuccess,
+    isLoading: isApiLoading,
+  } = useQuery({
+    queryKey: ['apistatusrecords'],
+    queryFn: () =>
+      fetchWithTimeout('https://api.kacky.gg/records/leaderboard/kr/321'),
+    retry: 1,
+    retryDelay: 1000,
+  });
 
   // Fetch servers data
   const { data, isSuccess, isLoading } = useQuery({
@@ -52,7 +62,7 @@ const Dashboard = () => {
     refetchOnWindowFocus: true,
     refetchInterval: 30000,
     retry: true,
-    enabled: isApiSuccess
+    enabled: isApiSuccess,
   });
 
   useEffect(() => {
@@ -83,148 +93,157 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (isSuccess) {
-    // const counterCopy = [...counter];
-    const timer = setInterval(() => {
-      const counterCopy = [...counter]; // Create a copy to avoid mutating original state
+      // const counterCopy = [...counter];
+      const timer = setInterval(() => {
+        const counterCopy = [...counter]; // Create a copy to avoid mutating original state
 
-      counter.forEach((timeLeft, index) => {
-        if (timeLeft > 0) {
-          counterCopy[index] = timeLeft - 1; // Decrement timeLeft for each server
-        }
-      });
+        counter.forEach((timeLeft, index) => {
+          if (timeLeft > 0) {
+            counterCopy[index] = timeLeft - 1; // Decrement timeLeft for each server
+          }
+        });
 
-      // Update the state with the modified counterCopy
-      setCounter(counterCopy);
-    }, 1000);
+        // Update the state with the modified counterCopy
+        setCounter(counterCopy);
+      }, 1000);
 
-    return () => clearInterval(timer);
-  }
+      return () => clearInterval(timer);
+    }
   }, [counter]);
-
-  if (!api || isApiError) {
+  
+  if(isApiLoading) { 
     return (
-    <Center>
-      <VStack>
-        <Text fontSize="2xl">Kacky servers are down for maintenance.</Text>
-        <Text fontSize="xl">We are working on a fix.</Text>
-        <Text>Thank you for your patience and see you soon.</Text>
-      </VStack>
-    </Center>
-    )
-  } else {
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Center w='full'>
-        <Flex
-          maxW={{ base: 'container.sm', xl: 'container.xl' }}
-          w={['full', 500, 500]}
-          justifyContent='center'
-          align='center'
-          direction='column'
-          // w='full'
-          rounded='1.5rem'
-          overflow='hidden'
-          bg={colorMode === 'dark' ? 'neutral.900' : 'neutral.100'}
-          shadow='md'
-        >
-          <Box
-            py={3}
-            px={{ base: 3, md: 4 }}
-            bg={colorMode === 'dark' ? 'neutral.800' : 'neutral.200'}
-            w='full'
-            position='relative'
-          >
-            <Flex justify='space-between' align='center'>
-              <HStack align='center'>
-                <Image h='2rem' src={IMAGES.kr5battery} />
-                {event.type === 'kr' ? (
-                  <Text fontWeight='bold' fontSize='1.2rem'>
-                    Kacky Reloaded {event.edition}
-                  </Text>
-                ) : event.type === 'kk' ? (
-                  <Text fontWeight='bold' fontSize='1.2rem'>
-                    Kackiest Kacky {event.edition}
-                  </Text>
-                ) : (
-                  <Text fontWeight='bold' fontSize='1.2rem'>
-                    Kacky Remixed {event.edition}
-                  </Text>
-                )}
-              </HStack>
-            </Flex>
-          </Box>
-          <Box justifyContent='center' alignContent='center' w='full' gap={0}>
-            <HStack justify='space-between' px={{ base: 3, md: 4 }} py={2}>
-              <Text
-                fontSize='sm'
-                fontWeight='light'
-                color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-              >
-                Active now
-              </Text>
-              <Text
-                fontSize='sm'
-                fontWeight='light'
-                color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
-              >
-                Next maps
-              </Text>
-            </HStack>
-            {isLoading ? (
-              <>
-                {[...Array(5)].map((_, idx) => (
-                  <Box
-                    key={idx}
-                    width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
-                  >
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    >
-                      <Skeleton
-                        height='85px'
-                        startColor={`${
-                          colorMode === 'dark'
-                            ? getDefaultBackgrounds().dark[0]
-                            : getDefaultBackgrounds().light[0]
-                        }75`}
-                        endColor={`${
-                          colorMode === 'dark'
-                            ? getDefaultBackgrounds().dark[1]
-                            : getDefaultBackgrounds().light[1]
-                        }75`}
-                      />
-                    </motion.div>
-                  </Box>
-                ))}
-              </>
-            ) : (
-              <>
-                {servers.map((server, idx) => (
-                  <Fragment key={server.serverNumber}>
-                    <CompactServerList
-                      {...server}
-                      timeLeft={counter[idx] - mapChangeEstimate}
-                      isLoading={isLoading}
-                      isSuccess={isSuccess}
-                    />
-
-                    <Divider my={1} _last={{ display: 'none' }} />
-                  </Fragment>
-                ))}
-              </>
-            )}
-          </Box>
-        </Flex>
+      <Center>
+        <Spinner />
       </Center>
-      {/* Second dashboard design */}
-      {/* <Box>
+    )
+  }
+
+  if (isApiError) {
+    return (
+      <Center>
+        <VStack>
+          <Text fontSize='2xl'>Kacky servers are down for maintenance.</Text>
+          <Text fontSize='xl'>We are working on a fix.</Text>
+          <Text>Thank you for your patience and see you soon.</Text>
+        </VStack>
+      </Center>
+    );
+  }
+
+  if (isApiSuccess && isSuccess) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Center w='full'>
+          <Flex
+            maxW={{ base: 'container.sm', xl: 'container.xl' }}
+            w={['full', 500, 500]}
+            justifyContent='center'
+            align='center'
+            direction='column'
+            // w='full'
+            rounded='1.5rem'
+            overflow='hidden'
+            bg={colorMode === 'dark' ? 'neutral.900' : 'neutral.100'}
+            shadow='md'
+          >
+            <Box
+              py={3}
+              px={{ base: 3, md: 4 }}
+              bg={colorMode === 'dark' ? 'neutral.800' : 'neutral.200'}
+              w='full'
+              position='relative'
+            >
+              <Flex justify='space-between' align='center'>
+                <HStack align='center'>
+                  <Image h='2rem' src={IMAGES.kr5battery} />
+                  {event.type === 'kr' ? (
+                    <Text fontWeight='bold' fontSize='1.2rem'>
+                      Kacky Reloaded {event.edition}
+                    </Text>
+                  ) : event.type === 'kk' ? (
+                    <Text fontWeight='bold' fontSize='1.2rem'>
+                      Kackiest Kacky {event.edition}
+                    </Text>
+                  ) : (
+                    <Text fontWeight='bold' fontSize='1.2rem'>
+                      Kacky Remixed {event.edition}
+                    </Text>
+                  )}
+                </HStack>
+              </Flex>
+            </Box>
+            <Box justifyContent='center' alignContent='center' w='full' gap={0}>
+              <HStack justify='space-between' px={{ base: 3, md: 4 }} py={2}>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Active now
+                </Text>
+                <Text
+                  fontSize='sm'
+                  fontWeight='light'
+                  color={colorMode === 'dark' ? 'neutral.400' : 'neutral.700'}
+                >
+                  Next maps
+                </Text>
+              </HStack>
+              {isLoading ? (
+                <>
+                  {[...Array(5)].map((_, idx) => (
+                    <Box
+                      key={idx}
+                      width={['100%', '100%', '100%']} // Full width on small screens, half width on larger screens with gap adjustment
+                    >
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      >
+                        <Skeleton
+                          height='85px'
+                          startColor={`${
+                            colorMode === 'dark'
+                              ? getDefaultBackgrounds().dark[0]
+                              : getDefaultBackgrounds().light[0]
+                          }75`}
+                          endColor={`${
+                            colorMode === 'dark'
+                              ? getDefaultBackgrounds().dark[1]
+                              : getDefaultBackgrounds().light[1]
+                          }75`}
+                        />
+                      </motion.div>
+                    </Box>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {servers.map((server, idx) => (
+                    <Fragment key={server.serverNumber}>
+                      <CompactServerList
+                        {...server}
+                        timeLeft={counter[idx] - mapChangeEstimate}
+                        isLoading={isLoading}
+                        isSuccess={isSuccess}
+                      />
+
+                      <Divider my={1} _last={{ display: 'none' }} />
+                    </Fragment>
+                  ))}
+                </>
+              )}
+            </Box>
+          </Flex>
+        </Center>
+        {/* Second dashboard design */}
+        {/* <Box>
         <Heading as='h2' textAlign='center'>
           All servers
         </Heading>
@@ -295,8 +314,9 @@ const Dashboard = () => {
           </TabPanels>
         </Tabs>
       </Box> */}
-    </motion.div>
-  );}
+      </motion.div>
+    );
+  }
 };
 
 export default Dashboard;

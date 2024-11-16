@@ -1,9 +1,9 @@
 // React
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // UI & Layout
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Spinner } from '@chakra-ui/react';
 import MainLayout from './MainLayout';
 
 // React Query
@@ -21,32 +21,32 @@ import AuthContext from './context/AuthContext';
 import EventContext from './context/EventContext';
 
 // Views - Dashboard
-import Dashboard from './views/Dashboard/Dashboard';
-import PreEvent from './views/Dashboard/PreEvent';
-import EventEnd from './views/Dashboard/EventEnd';
-import OffSeason from './views/Dashboard/OffSeason';
+const Dashboard = lazy(() => import('./views/Dashboard/Dashboard'));
+const PreEvent = lazy(() => import('./views/Dashboard/PreEvent'));
+const EventEnd = lazy(() => import('./views/Dashboard/EventEnd'));
+const OffSeason = lazy(() => import('./views/Dashboard/OffSeason'));
 
 // Views - Navigation routes
-import Schedule from './views/Schedule/Schedule';
-import Hunting from './views/Hunting/Hunting';
-import Profile from './views/Profile/Profile';
-import Glance from './views/Glance/Glance';
+const Schedule = lazy(() => import('./views/Schedule/Schedule'));
+const Hunting = lazy(() => import('./views/Hunting/Hunting'));
+const Profile = lazy(() => import('./views/Profile/Profile'));
+const Glance = lazy(() => import('./views/Glance/Glance'));
 
 // Views - Leaderboard
-import Leaderboard from './views/Leaderboard/Leaderboard';
-import WRHolders from './views/WRHolders/WRHolders';
+const Leaderboard = lazy(() => import('./views/Leaderboard/Leaderboard'));
+const WRHolders = lazy(() => import('./views/WRHolders/WRHolders'));
 
 // Views - Streamer Info
-import StreamerInfo from './views/StreamerInfo/StreamerInfo';
+const StreamerInfo = lazy(() => import('./views/StreamerInfo/StreamerInfo'));
 
 // Views - Player info
-import Player from './views/Player/Player';
+const Player = lazy(() => import('./views/Player/Player'));
 
 // Views - Admin
-import AdminIndex from './views/Admin/AdminIndex';
-import EventManager from './views/Admin/EventManager';
-import WRManager from './views/Admin/WRManager';
-import MapManager from './views/Admin/MapManager';
+const AdminIndex = lazy(() => import('./views/Admin/AdminIndex'));
+const EventManager = lazy(() => import('./views/Admin/EventManager'));
+const WRManager = lazy(() => import('./views/Admin/WRManager'));
+const MapManager = lazy(() => import('./views/Admin/MapManager'));
 
 // Views - Widgets
 import { Widgets } from './views/Widgets/WidgetsLayout';
@@ -91,6 +91,7 @@ const App = () => {
           return <OffSeason />;
       }
     }
+    return null; // Add a default return for when isSuccessEventStatus is false
   };
   // Fetch servers data
   const { data: eventStatus, isSuccess: isSuccessEventStatus } = useQuery({
@@ -125,6 +126,7 @@ const App = () => {
     <EventContext.Provider value={{ event, setEvent }}>
       <AuthContext.Provider value={{ authentication, setAuthentication }}>
         <ChakraProvider theme={theme}>
+        <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path='/' element={<MainLayout />}>
               <Route index element={<EventSwitcher event={event} />} />
@@ -148,6 +150,7 @@ const App = () => {
               <Route path='*' element={<div>Nothing here</div>} />
             </Route>
           </Routes>
+          </Suspense>
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </AuthContext.Provider>

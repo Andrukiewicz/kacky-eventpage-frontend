@@ -406,7 +406,7 @@ const CompactServerList = ({
                                   : theme.shadows.dropGlow
                               }
                             >
-                              by {maps[0].author}
+                              {maps[0].author}
                             </Text>
                           </HStack>
                         </motion.div>

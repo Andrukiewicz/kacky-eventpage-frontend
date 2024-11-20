@@ -115,8 +115,7 @@ const MapImageModal = ({
                     // letterSpacing='0.1em'
                     fontWeight='bold'
                     style={{
-                      background:
-                        'url(/src/assets/logos/kr5bg.webp) 0 0 / cover no-repeat',
+                      background: `url(${IMAGES.kr5bg}) 0 0 / cover no-repeat`,
                       maskRepeat: 'no-repeat',
                       maskSize: 'contain',
                       backgroundClip: 'text',

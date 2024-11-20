@@ -338,6 +338,7 @@ const CompactServerList = ({
                             fontSize={'2xl'}
                             onClick={onOpen}
                             cursor='pointer'
+                            position='relative'
                             _hover={{ transform: 'scale(1.05)' }}
                             transition='transform 0.1s ease-in-out'
                           >
@@ -398,7 +399,7 @@ const CompactServerList = ({
                             <Text
                               fontSize='xs'
                               position={{base: 'absolute'}}
-                              bottom={{base: '0.2rem'}}
+                              top={{base: '1.8rem'}}
                               display={{ base: 'none', sm: 'block' }}
                               filter={
                                 colorMode === 'dark'

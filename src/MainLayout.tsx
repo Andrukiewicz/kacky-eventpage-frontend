@@ -1,9 +1,10 @@
-import { Box, VStack, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Center, Spinner, VStack, useBreakpointValue } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
 import Header from './components/Header/Navigation/Header';
 import HeaderMobile from './components/Header/Navigation/HeaderMobile';
 import Footer from './components/Footer/Footer';
+import { Suspense } from 'react';
 
 function ResponsiveHeader() {
   const content = useBreakpointValue({
@@ -27,7 +28,9 @@ const MainLayout = () => {
           w='full'
           maxW={{ base: 'full', md: 'container.xl' }}
         >
+          <Suspense fallback={<Center><Spinner /></Center>}>
           <Outlet />
+          </Suspense>
         </Box>
         <Footer />
       </VStack>

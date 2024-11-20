@@ -10,6 +10,7 @@ import {
   Divider,
   VStack,
   Spinner,
+  Link,
 } from '@chakra-ui/react';
 import { useEffect, useState, useContext, useRef, Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -22,6 +23,7 @@ import EventContext from '@/context/EventContext';
 import { getDefaultBackgrounds } from '@/utils/theme';
 import { IMAGES } from '@/utils/Images';
 import CompactServerList from '@/components/ServerWidgets/CompactServerList';
+import { Duration } from 'luxon';
 
 const mapChangeEstimate = 0;
 
@@ -64,6 +66,13 @@ const Dashboard = () => {
     retry: true,
     enabled: isApiSuccess,
   });
+
+  // Timer for days left till comp end
+    // Convert seconds to Luxon Duration and calculate days
+    // const duration = Duration.fromObject({ seconds: data?.comptimeLeft });
+    // const daysLeft = Math.floor(duration.as('days')); // Get full days only
+    // console.log(daysLeft)
+    // console.log(data?.comptimeLeft)
 
   useEffect(() => {
     if (isSuccess) {
@@ -138,6 +147,22 @@ const Dashboard = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
+        <Center w='full'>
+          <VStack maxW='25rem' mb='1rem'>
+            <Text fontSize='2xl' fontWeight='bold'>Announcement</Text>
+          <Text fontSize='xl'>Prize pool and bounties</Text>
+          {/* Timer comp time left */}
+          {/* <Text>{daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left` : 'Less than a day left'}</Text> */}
+          <Text fontSize='sm' style={{
+                      textWrap: 'balance',
+                      textAlign: 'center'
+                    }}>
+                      3000€ are spread across the top 10 players and the best mappers. The winner of Kacky Reloaded 5 will be taking home a Trophy and an accompanying 1200€. Additionally there are bounties for those looking for a different style of challenge. The prize pool is still subject to change, as you have the opportunity to contribute straight to the prize pool.
+                      </Text>
+                      <Text fontSize='lg'>All prizepool contributions should be done via</Text>
+                      <Link>https://paypal.me/bompitm</Link>
+          </VStack>
+        </Center>
         <Center w='full'>
           <Flex
             maxW={{ base: 'container.sm', xl: 'container.xl' }}

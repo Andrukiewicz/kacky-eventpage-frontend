@@ -1,9 +1,9 @@
 // React
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // UI & Layout
-import { ChakraProvider, Spinner } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import MainLayout from './MainLayout';
 
 // React Query
@@ -126,7 +126,6 @@ const App = () => {
     <EventContext.Provider value={{ event, setEvent }}>
       <AuthContext.Provider value={{ authentication, setAuthentication }}>
         <ChakraProvider theme={theme}>
-        <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path='/' element={<MainLayout />}>
               <Route index element={<EventSwitcher event={event} />} />
@@ -150,7 +149,6 @@ const App = () => {
               <Route path='*' element={<div>Nothing here</div>} />
             </Route>
           </Routes>
-          </Suspense>
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </AuthContext.Provider>

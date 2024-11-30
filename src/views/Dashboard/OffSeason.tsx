@@ -12,17 +12,17 @@ const OffSeason = () => (
           size='2xl'
           m={0}
         >
-          Kackiest Kacky 9
+          Kacky Reloaded 5
         </Heading>
-        <Text>1.06.2024 - 30.06.2024</Text>
+        <Text>1.11.2024 - 30.11.2024</Text>
       </VStack>
       <Flex flexDir={'row'} gap={{ base: 0, md: 10 }}>
-        <PlayerCard name='redank' rank={2} fins={50} avg={7.22} wrs={5} />
-        <PlayerCard name='Social' rank={1} fins={50} avg={5.42} wrs={18} />
-        <PlayerCard name='Link' rank={3} fins={50} avg={12.48} wrs={5} />
+        <PlayerCard name='Mikmos' rank={2} fins={75} avg={10.280} wrs={2} />
+        <PlayerCard name='Simo' rank={1} fins={75} avg={7.627} wrs={7} />
+        <PlayerCard name='Silenz' rank={3} fins={75} avg={11.960} wrs={3} />
       </Flex>
       <Text fontSize={{ base: 'md', md: 'xl' }} textTransform='none' px={4}>
-        Better get training so your name is here next time!
+        Try harder next time so your name gets here!
         <br />
         Join the Kacky Servers in Trackmania Nations Forever or the &quot;Kacky
         Reloaded&quot; Club in Trackmania 2020!

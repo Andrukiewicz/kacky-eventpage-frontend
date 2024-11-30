@@ -36,12 +36,12 @@ const EventEnd = () => {
 
   const getRank = () => {
     if (finishes < 1) return rank.none;
-    if (finishes < 15) return rank.plastic;
+    if (finishes < 10) return rank.plastic;
     if (finishes < 25) return rank.bronze;
-    if (finishes < 40) return rank.silver;
+    if (finishes < 50) return rank.silver;
     // if (finishes === 69) return rank.kacky;
-    if (finishes < 50) return rank.gold;
-    if (finishes === 50) return rank.kacky;
+    if (finishes < 75) return rank.gold;
+    if (finishes === 75) return rank.kacky;
 
     return rank.none;
   };
